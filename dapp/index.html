@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Prosperity - Coin of Gold</title>
+    <link rel="icon" href="public/logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome - 使用CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Wallet Selection Modal -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <div class="wallet-modal-header">
+                <h2><i class="fas fa-wallet"></i> Connect Wallet</h2>
+                <button class="wallet-modal-close" id="closeWalletModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="wallet-options">
+                <div class="wallet-option" data-wallet="metamask">
+                    <div class="wallet-icon">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjguNSAyLjVsLTkuNSA3IDEuNzUtNC4yNXoiIGZpbGw9IiNlMjc2MWIiLz48cGF0aCBkPSJNMy41IDIuNWw5LjQgNy4wNS0xLjctNC4zeiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0yNC4yNSAyMi41bC0yLjUgMy44NSA1LjM1IDEuNDcgMS41NC01LjI3eiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0zLjM2IDIyLjU1bDEuNTQgNS4yNyA1LjM1LTEuNDctMi41LTMuODV6IiBmaWxsPSIjZTI3NjFiIi8+PHBhdGggZD0iTTE0LjUgMTMuNWwtMS41IDIuMjUgNS4zNS4yNS0uMi01Ljc1eiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0xNy41IDEzLjVsLTMuNjUtMy4yNS0uMiA1Ljc1IDUuMzUtLjI1eiIgZmlsbD0iI2UyNzYxYiIvPjwvc3ZnPg==" 
+                             alt="MetaMask">
+                    </div>
+                    <div class="wallet-info">
+                        <h3>MetaMask</h3>
+                        <p>Connect using MetaMask wallet</p>
+                    </div>
+                    <span class="wallet-badge">Popular</span>
+                </div>
+                
+                <div class="wallet-option" data-wallet="binance">
+                    <div class="wallet-icon">
+                        <svg width="40" height="40" viewBox="0 0 126.61 126.61" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="#f3ba2f">
+                                <path d="M38.73 53.2l24.59-24.58 24.6 24.6 14.3-14.31L63.32 0 24.43 38.9z"/>
+                                <path d="M0 63.31l14.3-14.3 14.31 14.3-14.31 14.3z"/>
+                                <path d="M38.73 73.41l24.59 24.59 24.6-24.6 14.31 14.29-38.9 38.91-38.91-38.88z"/>
+                                <path d="M98 63.31l14.3-14.3 14.31 14.3-14.31 14.3z"/>
+                                <path d="M77.83 63.3L63.32 48.78 52.59 59.51l-1.24 1.23-2.54 2.54 14.51 14.5 14.51-14.47z"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="wallet-info">
+                        <h3>Binance Wallet</h3>
+                        <p>Connect using Binance Chain Wallet</p>
+                    </div>
+                </div>
+                
+                <div class="wallet-option" data-wallet="walletconnect">
+                    <div class="wallet-icon">
+                        <img src="https://avatars.githubusercontent.com/u/37784886" alt="WalletConnect">
+                    </div>
+                    <div class="wallet-info">
+                        <h3>WalletConnect</h3>
+                        <p>Scan with mobile wallet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="public/logo.svg" alt="CPC Logo" class="logo-img" onerror="this.onerror=null; this.src='public/logo.PNG';">
+                <span class="logo-text">Common Prosperity</span>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-menu hidden" id="navMenu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#airdrop" class="nav-link">Airdrop</a>
+                <a href="#presale" class="nav-link">NFT Sale</a>
+                <a href="#mining" class="nav-link">Mining</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="nav-actions">
+                <button class="connect-wallet-btn" id="connectWallet">
+                    <i class="fas fa-wallet"></i>
+                    Connect Wallet
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="highlight">CPCoin</span> WILL REDEFINING <span class="highlight">THE FUTURE OF</span>
+                    <br>COMMON <span class="highlight">PROSPERITY</span>
+                </h1>
+                <p class="hero-subtitle">
+                    When individual boats unite into a fleet, the tide will turn in our favor. Reject being harvested, reject being defined—This time, we are not just the players; we are the rule-makers.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="window.location.href='/voting'">
+                        Voting Platform <i class="fas fa-vote-yea"></i>
+                    </button>
+                    <button class="btn-secondary" onclick="window.location.href='/otc'">
+                        OTC Trading <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Supply</h3>
+                        <p class="stat-value" id="totalSupply">13,370,000 CPC</p>
+                        <span class="stat-change">Fixed Supply</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Airdrop Pool</h3>
+                        <p class="stat-value" id="airdropRemaining">1,337,000 CPC</p>
+                        <span class="stat-change">10% of Supply</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>CPC Token Contract</h3>
+                        <p class="stat-value contract-address-display" style="cursor: pointer;" onclick="copyAddress('0x5453C25CA8a0aFd9C6e73FF8c8C6Fe299D7F60C9')">
+                            <span class="address-full">0x5453C25CA8a0aFd9C6e73FF8c8C6Fe299D7F60C9</span>
+                            <span class="address-short">0x5453...F60C9</span>
+                        </p>
+                        <span class="stat-change" style="cursor: pointer;" onclick="window.open('https://bscscan.com/token/0x5453C25CA8a0aFd9C6e73FF8c8C6Fe299D7F60C9', '_blank')">
+                            Click to copy or view on BSCScan
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="crypto-icon ethereum">
+                <i class="fab fa-ethereum"></i>
+            </div>
+            <div class="crypto-icon bitcoin">
+                <i class="fab fa-bitcoin"></i>
+            </div>
+            <div class="crypto-icon bsc">
+                <span class="bsc-logo">BSC</span>
+            </div>
+            <div class="crypto-icon center-logo">
+                <img src="public/logo.svg" alt="CPC" onerror="this.onerror=null; this.src='public/logo.PNG';">
+            </div>
+        </div>
+        
+
+    </section>
+
+    <!-- Airdrop Section -->
+    <section id="airdrop" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>BABT Airdrop</h2>
+                <div class="contract-rules-inline">
+                    <div class="rules-header-inline" data-section="airdrop">
+                        <p class="rules-subtitle">
+                            <i class="fas fa-info-circle"></i> 
+                            View Contract Rules
+                        </p>
+                        <button class="toggle-btn-inline" id="airdrop-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <ul class="rules-content-inline collapsed" id="airdrop-rules">
+                        <li><i class="fas fa-check-circle"></i> <strong>Eligibility:</strong> Only BABT NFT holders can claim. <a href="https://www.binance.com/en/babt" target="_blank" style="color: #2ecc71;">What is BABT?</a></li>
+                        <li><i class="fas fa-info-circle"></i> <strong>BABT Contract:</strong> <a href="https://bscscan.com/token/0x2B09d47D550061f995A3b5C6F0Fd58005215D7c8" target="_blank" style="color: #3498db; font-family: monospace;">0x2B09...5D7c8</a></li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Claim Amount:</strong> 1 CPC per address (sent immediately)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Limit:</strong> Each address can only claim once</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Total Pool:</strong> 1,337,000 CPC (10% of total supply)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Duration:</strong> No time limit - claim anytime until pool is depleted</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Permanent:</strong> No team withdrawal, tokens remain claimable forever</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Decentralized:</strong> Contract ownership renounced after deployment</li>
+                        <li style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(46, 204, 113, 0.2);">
+                            <i class="fas fa-file-contract"></i> <strong>Airdrop Contract:</strong> 
+                            <a href="https://bscscan.com/address/0x9929858f17FD3B3e2D012AB6bB729603D1B88B07" target="_blank" style="color: #3498db; font-family: monospace; word-break: break-all;">
+                                0x9929858f17FD3B3e2D012AB6bB729603D1B88B07
+                            </a>
+                            <button class="copy-btn-inline" onclick="copyAddress('0x9929858f17FD3B3e2D012AB6bB729603D1B88B07')" title="Copy address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="airdrop-container">
+                <div class="airdrop-card">
+                    <div class="card-header">
+                        <img src="public/babt-logo.gif" alt="BABT" class="babt-logo">
+                        <h3>BABT Verification Required</h3>
+                    </div>
+                    
+                    <div class="airdrop-info">
+                        <div class="info-item">
+                            <span class="label">Claim Amount:</span>
+                            <span class="value">1 CPC</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Your Status:</span>
+                            <span class="value" id="babtStatus" style="color: #95a5a6;">Checking...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="airdropProgress"></div>
+                        <span class="progress-text" id="airdropProgressText">0% claimed</span>
+                    </div>
+                    
+                    <button class="claim-btn" id="claimAirdrop" disabled>
+                        <i class="fas fa-gift"></i>
+                        Claim Airdrop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Presale Section -->
+    <section id="presale" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-gem"></i> NFT Sale</h2>
+                <div class="contract-rules-inline">
+                    <div class="rules-header-inline" data-section="presale">
+                        <p class="rules-subtitle">
+                            <i class="fas fa-info-circle"></i> 
+                            View Sale Rules
+                        </p>
+                        <button class="toggle-btn-inline" id="presale-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <ul class="rules-content-inline collapsed" id="presale-rules">
+                        <li><i class="fas fa-gem"></i> <strong>NFT Access:</strong> Minimum 1 BNB to receive your exclusive NFT (one per wallet)</li>
+                        <li><i class="fas fa-gift"></i> <strong>Instant Bonus:</strong> Receive 133.7 CPC tokens per BNB spent (sent immediately, no lock)</li>
+                        <li><i class="fas fa-star"></i> <strong>Daily Rewards:</strong> NFT holders earn 1 CPC per day (follows halving logic), claimable every 24 hours</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>NFT Type:</strong> Soulbound NFT (non-transferable, permanently bound to your wallet)</li>
+                        <li><i class="fas fa-info-circle"></i> <strong>Important:</strong> Higher contributions = more instant bonus tokens, but daily NFT reward is fixed at 1 CPC/day</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Total Available:</strong> Limited supply - 1,337,000 CPC bonus tokens available</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Payment:</strong> All BNB sent directly to team address</li>
+                        <li><i class="fas fa-clock"></i> <strong>Sale Duration:</strong> 365 days from deployment</li>
+                        <li><i class="fas fa-info-circle"></i> <strong>After Sale Ends:</strong> Remaining bonus tokens transferred to team address</li>
+                        <li style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(46, 204, 113, 0.2);">
+                            <i class="fas fa-file-contract"></i> <strong>Presale Contract:</strong> 
+                            <a href="https://bscscan.com/address/0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d" target="_blank" style="color: #3498db; font-family: monospace; word-break: break-all;">
+                                0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d
+                            </a>
+                            <button class="copy-btn-inline" onclick="copyAddress('0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d')" title="Copy address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <i class="fas fa-image"></i> <strong>NFT Contract:</strong> 
+                            <a href="https://bscscan.com/address/0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359" target="_blank" style="color: #3498db; font-family: monospace; word-break: break-all;">
+                                0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359
+                            </a>
+                            <button class="copy-btn-inline" onclick="copyAddress('0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359')" title="Copy address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="presale-container">
+                <div class="presale-card">
+                    <div class="presale-stats">
+                        <div class="stat">
+                            <h4><i class="fas fa-chart-line"></i> Total Raised</h4>
+                            <p id="bnbRaised">0 BNB</p>
+                        </div>
+                        <div class="stat">
+                            <h4><i class="fas fa-gift"></i> Bonus Distributed</h4>
+                            <p id="cpcSold">0 CPC</p>
+                        </div>
+                        <div class="stat">
+                            <h4><i class="fas fa-coins"></i> Bonus Rate</h4>
+                            <p>133.7 CPC/BNB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="presale-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="presaleProgressBar"></div>
+                        </div>
+                        <span class="progress-label">Target: 10,000 BNB</span>
+                    </div>
+                    
+                    <div class="purchase-form">
+                        <div class="input-group">
+                            <label><i class="fas fa-shopping-cart"></i> Select Purchase Amount</label>
+                            <div class="quick-amount-buttons">
+                                <button type="button" class="amount-btn" data-amount="1" data-type="bnb">
+                                    <span class="amount-value"><i class="fas fa-gem"></i> NFT (1 BNB)</span>
+                                    <span class="amount-receive">+ 133.7 CPC Bonus</span>
+                                </button>
+                                <button type="button" class="amount-btn" data-amount="10" data-type="bnb">
+                                    <span class="amount-value"><i class="fas fa-gem"></i> NFT (10 BNB)</span>
+                                    <span class="amount-receive">+ 1,337 CPC Bonus</span>
+                                </button>
+                                <button type="button" class="amount-btn" data-amount="100" data-type="bnb">
+                                    <span class="amount-value"><i class="fas fa-gem"></i> NFT (100 BNB)</span>
+                                    <span class="amount-receive">+ 13,370 CPC Bonus</span>
+                                </button>
+                                <button type="button" class="amount-btn" data-amount="1000" data-type="bnb">
+                                    <span class="amount-value"><i class="fas fa-gem"></i> NFT (1000 BNB)</span>
+                                    <span class="amount-receive">+ 133,700 CPC Bonus</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="nft-bonus">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Get exclusive NFT + instant bonus tokens! NFT holders earn 1 CPC daily (regardless of purchase amount)</span>
+                        </div>
+                        
+                        <div class="nft-bonus" style="background: rgba(230, 126, 34, 0.1); border-left-color: #e67e22; margin-top: 10px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #e67e22;"></i>
+                            <span style="color: #e67e22;"><strong>Gas Fee Notice:</strong> First purchase mints NFT (~0.006-0.01 BNB gas). Subsequent purchases cost less (~0.002-0.004 BNB gas).</span>
+                        </div>
+                    </div>
+                    
+                    <div class="user-contribution">
+                        <h4><i class="fas fa-user"></i> Your Contribution</h4>
+                        <div class="contribution-stats">
+                            <span>Total Contributed: <strong id="userBnb">0 BNB</strong></span>
+                            <span>NFT Status: <strong id="nftStatus">Not Owned</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mining Section -->
+    <section id="mining" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>CPC Mining</h2>
+                <div class="contract-rules-inline">
+                    <div class="rules-header-inline" data-section="mining">
+                        <p class="rules-subtitle">
+                            <i class="fas fa-info-circle"></i> 
+                            View Contract Rules
+                        </p>
+                        <button class="toggle-btn-inline" id="mining-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <ul class="rules-content-inline collapsed" id="mining-rules">
+                        <li><i class="fas fa-check-circle"></i> <strong>Entry Fee:</strong> One-time payment of 2 USDT to activate staking</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Stake Amount:</strong> Must be ≥10 CPC (whole numbers only, no decimals)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Lock Period:</strong> 3,650 days (10 years)</li>
+                        <li><i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i> <strong>Important:</strong> Adding more stake will reset your 10-year lock period. Use different addresses to maintain separate lock periods.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Initial Rate:</strong> 1 CPC per hour distributed to all stakers</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Halving:</strong> Rewards halve every 133,700 CPC mined from pool</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Weight System:</strong> Initial base weight of 5,000 CPC. Your share = Your stake / Total staked (or 5,000, whichever is greater)</li>
+                        <li><i class="fas fa-star" style="color: #f39c12;"></i> <strong>Early Advantage:</strong> First 5,000 CPC stakers receive 175% APY! After that, APY drops to ~17.5%</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Total Pool:</strong> 10,696,000 CPC (80% of total supply)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>NFT Rewards:</strong> NFT holders can claim 1 CPC daily (synchronized with halving)</li>
+                        <li style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(46, 204, 113, 0.2);">
+                            <i class="fas fa-file-contract"></i> <strong>Mining Contract:</strong> 
+                            <a href="https://bscscan.com/address/0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743" target="_blank" style="color: #3498db; font-family: monospace; word-break: break-all;">
+                                0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743
+                            </a>
+                            <button class="copy-btn-inline" onclick="copyAddress('0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743')" title="Copy address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mining-container">
+                <div class="mining-overview">
+                    <div class="mining-stat">
+                        <h4>Total Staked</h4>
+                        <p id="totalStaked">0 CPC</p>
+                    </div>
+                    <div class="mining-stat">
+                        <h4>Current Rate</h4>
+                        <p id="miningRate">1 CPC/hour</p>
+                    </div>
+                    <div class="mining-stat">
+                        <h4>Pool Remaining</h4>
+                        <p id="poolRemaining">10,696,000 CPC</p>
+                    </div>
+                </div>
+                
+                <div class="mining-cards">
+                    <div class="mining-card">
+                        <h3>Stake CPC Tokens</h3>
+                        
+                        <div class="stake-info" style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #f39c12;">
+                            <p style="margin: 0; color: #f39c12;"><i class="fas fa-ticket-alt"></i> <strong>Staking Ticket Required</strong></p>
+                            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #b0b0b0;">You need to pay 2 USDT to activate staking</p>
+                        </div>
+                        
+                        <div class="stake-info">
+                            <p>Lock Period: <strong>10 Years</strong></p>
+                            <p>Your Stake: <strong id="userStake">0 CPC</strong></p>
+                            <p>Your Weight: <strong id="userWeight">0</strong></p>
+                            <p>Ticket Status: <strong id="ticketStatus" style="color: #e74c3c;">Not Activated</strong></p>
+                        </div>
+                        
+                        <button class="stake-btn" id="activateStaking" style="background: linear-gradient(45deg, #f39c12, #e67e22); margin-bottom: 10px;">
+                            <i class="fas fa-ticket-alt"></i>
+                            Activate Staking (2 USDT)
+                        </button>
+                        
+                        <div class="input-group">
+                            <label>Select Stake Amount</label>
+                            <div class="quick-amount-buttons">
+                                <button type="button" class="amount-btn stake-amount-btn" data-amount="10" data-type="stake" disabled>
+                                    <span class="amount-value">10 CPC</span>
+                                    <span class="amount-apy">~175% APY*</span>
+                                </button>
+                                <button type="button" class="amount-btn stake-amount-btn" data-amount="100" data-type="stake" disabled>
+                                    <span class="amount-value">100 CPC</span>
+                                    <span class="amount-apy">~175% APY*</span>
+                                </button>
+                                <button type="button" class="amount-btn stake-amount-btn" data-amount="1000" data-type="stake" disabled>
+                                    <span class="amount-value">1,000 CPC</span>
+                                    <span class="amount-apy">~175% APY*</span>
+                                </button>
+                                <button type="button" class="amount-btn stake-amount-btn" data-amount="10000" data-type="stake" disabled>
+                                    <span class="amount-value">10,000 CPC</span>
+                                    <span class="amount-apy">~175% APY*</span>
+                                </button>
+                            </div>
+                            <small style="color: #f39c12; display: block; margin-top: 10px;">
+                                <i class="fas fa-exclamation-triangle"></i> Warning: Adding more stake will reset your 10-year lock period!
+                            </small>
+                            <small style="color: #888; display: block; margin-top: 5px; font-size: 0.85rem;">
+                                * Early stage APY (first 5,000 CPC staked). After that ~17.5% APY.
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="mining-card">
+                        <h3>Mining Rewards</h3>
+                        <div class="rewards-info">
+                            <p>Pending Rewards: <strong id="pendingRewards">0 CPC</strong></p>
+                            <p>NFT Daily Reward: <strong id="nftDailyReward">1 CPC/day</strong></p>
+                            <p>Next NFT Claim: <strong id="nextNftClaim">Available</strong></p>
+                        </div>
+                        
+                        <div class="reward-buttons">
+                            <button class="claim-btn" id="claimRewards">
+                                <i class="fas fa-coins"></i>
+                                Claim Mining Rewards
+                            </button>
+                        </div>
+                        
+                        <!-- NFT Display Panel -->
+                        <div class="nft-display-panel" id="nftDisplayPanel">
+                            <div class="nft-panel-header">
+                                <h4><i class="fas fa-image"></i> My CPC-NFT</h4>
+                                <span class="nft-count" id="nftCount">0</span>
+                            </div>
+                            <div class="nft-panel-content" id="nftPanelContent">
+                                <div class="nft-empty-state" id="nftEmptyState">
+                                    <i class="fas fa-box-open"></i>
+                                    <p>No NFT yet</p>
+                                    <small>Purchase an NFT in the NFT Sale section to get started</small>
+                                </div>
+                                <div class="nft-card-mini" id="nftCardMini" style="display: none;">
+                                    <div class="nft-image-mini">
+                                        <img id="nftImage" src="" alt="CPC-NFT">
+                                        <div class="nft-badge-mini" id="nftTokenId">#0</div>
+                                    </div>
+                                    <div class="nft-info-mini">
+                                        <div class="nft-name-mini" id="nftName">CPC-NFT #0</div>
+                                        <div class="nft-attributes-mini">
+                                            <div class="nft-attr-mini">
+                                                <span class="attr-label">Reward</span>
+                                                <span class="attr-value">1 CPC/day</span>
+                                            </div>
+                                            <div class="nft-attr-mini">
+                                                <span class="attr-label">Status</span>
+                                                <span class="attr-value" id="nftActiveStatus">Active</span>
+                                            </div>
+                                        </div>
+                                        <div class="nft-soulbound">
+                                            <i class="fas fa-lock"></i> Soulbound (Non-transferable)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="reward-buttons" style="margin-top: 15px;">
+                            <button class="claim-btn" id="claimNftRewards">
+                                <i class="fas fa-medal"></i>
+                                Claim NFT Rewards
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="halving-progress">
+                    <h4>Next Halving Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="halvingProgress"></div>
+                    </div>
+                    <p>Rewards halve every 1,069,600 CPC mined</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Common Prosperity</h2>
+                <p>The People's Gold - Fair, Scarce, Forever</p>
+            </div>
+            
+            <div class="about-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3>Equitable Distribution</h3>
+                    <p>BABT-based airdrop and capped mining weights prevent whale domination, ensuring fair access for all community members.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Decentralized Governance</h3>
+                    <p>All contracts renounce ownership post-deployment, ensuring no central authority can alter rules or control the ecosystem.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Digital Scarcity</h3>
+                    <p>Fixed supply of 13,370,000 CPC with halving rewards creates a deflationary model similar to Bitcoin and gold.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Long-term Value</h3>
+                    <p>10-year staking lockup and Soulbound NFT rewards incentivize holding, positioning CPC as a stable store of value.</p>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="public/logo.svg" alt="CPC Logo" class="footer-logo" onerror="this.onerror=null; this.src='public/logo.PNG';">
+                    <p>Common Prosperity - Coin of Gold</p>
+                </div>
+                <div class="footer-section">
+                    <h4><i class="fas fa-book"></i> Whitepaper</h4>
+                    <a href="public/whitepaper.pdf" target="_blank" style="display: block; margin: 5px 0;">
+                        <i class="fas fa-eye"></i> Read Online
+                    </a>
+                    <a href="public/whitepaper.pdf" download="CPC-Whitepaper.pdf" style="display: block; margin: 5px 0;">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://x.com/icpc_cc?s=21" target="_blank"><i class="fab fa-twitter"></i> Follow us on X</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Common Prosperity. All rights reserved. Decentralized and community-owned.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Web3 and Wallet Libraries -->
+    <script src="/public/web3.min.js"></script>
+    <script src="/public/walletconnect.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="config.js"></script>
+    <script src="contracts-abi-full.js"></script>
+    <script src="wallet-connector.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

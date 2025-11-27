@@ -1,0 +1,2420 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', 'Exo 2', monospace, sans-serif;
+    background: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Aurora Background Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(46, 204, 113, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(39, 174, 96, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 40% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001a00 50%, #000f00 75%, #000000 100%);
+    z-index: -2;
+    animation: aurora 20s ease-in-out infinite;
+}
+
+/* Aurora Animation */
+@keyframes aurora {
+
+    0%,
+    100% {
+        background:
+            radial-gradient(ellipse at 20% 50%, rgba(46, 204, 113, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 20%, rgba(39, 174, 96, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 40% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
+            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001a00 50%, #000f00 75%, #000000 100%);
+    }
+
+    25% {
+        background:
+            radial-gradient(ellipse at 60% 30%, rgba(46, 204, 113, 0.2) 0%, transparent 60%),
+            radial-gradient(ellipse at 30% 70%, rgba(39, 174, 96, 0.12) 0%, transparent 55%),
+            radial-gradient(ellipse at 80% 40%, rgba(46, 204, 113, 0.1) 0%, transparent 45%),
+            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001a00 50%, #000f00 75%, #000000 100%);
+    }
+
+    50% {
+        background:
+            radial-gradient(ellipse at 80% 60%, rgba(46, 204, 113, 0.18) 0%, transparent 55%),
+            radial-gradient(ellipse at 10% 40%, rgba(39, 174, 96, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 20%, rgba(46, 204, 113, 0.12) 0%, transparent 60%),
+            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001a00 50%, #000f00 75%, #000000 100%);
+    }
+
+    75% {
+        background:
+            radial-gradient(ellipse at 30% 80%, rgba(46, 204, 113, 0.16) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 10%, rgba(39, 174, 96, 0.11) 0%, transparent 55%),
+            radial-gradient(ellipse at 20% 30%, rgba(46, 204, 113, 0.09) 0%, transparent 45%),
+            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001a00 50%, #000f00 75%, #000000 100%);
+    }
+}
+
+/* Additional Aurora Particles */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(46, 204, 113, 0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(39, 174, 96, 0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(46, 204, 113, 0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(39, 174, 96, 0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(46, 204, 113, 0.2), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    z-index: -1;
+    animation: sparkle 15s linear infinite;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(46, 204, 113, 0.3);
+    box-shadow: 0 2px 20px rgba(46, 204, 113, 0.1);
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: transparent;
+    border: 2px solid #2ecc71;
+    color: #2ecc71;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(46, 204, 113, 0.2);
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+/* Logo扫光时的光晕效果 */
+.nav-logo::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    width: 40%;
+    height: 200%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 136, 0.4) 50%, 
+        transparent 100%);
+    transform: translateY(-50%) skewX(-20deg);
+    opacity: 0;
+    animation: logoSweepGlow 3s ease-in-out infinite;
+    pointer-events: none;
+    filter: blur(10px);
+}
+
+@keyframes logoSweepGlow {
+    0% {
+        left: -20%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    20% {
+        left: 120%;
+        opacity: 0;
+    }
+    100% {
+        left: 120%;
+        opacity: 0;
+    }
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 扫光效果 - 在文字上方 */
+.logo-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 136, 0.8) 50%, 
+        transparent 100%);
+    animation: textSweep 3s ease-in-out infinite;
+    transform: skewX(-20deg);
+}
+
+/* 从左到右扫过的动画 */
+@keyframes textSweep {
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 150%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+}
+
+/* Desktop - always show menu, ignore hidden class */
+@media (min-width: 769px) {
+    .nav-menu,
+    .nav-menu.hidden {
+        display: flex !important;
+    }
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.connect-wallet-btn {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    min-width: 160px;
+}
+
+.connect-wallet-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.wallet-address-text {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Wallet Dropdown */
+.wallet-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.wallet-connected-btn {
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    min-width: 160px;
+}
+
+.wallet-connected-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.wallet-connected-btn .fa-chevron-down {
+    font-size: 0.8rem;
+    margin-left: 0.25rem;
+    transition: transform 0.3s ease;
+}
+
+.wallet-dropdown-menu.show .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.wallet-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 12px;
+    min-width: 280px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.wallet-dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.wallet-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.wallet-dropdown-item:hover {
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.wallet-dropdown-item i {
+    font-size: 1.1rem;
+    color: #2ecc71;
+    width: 20px;
+    text-align: center;
+}
+
+.wallet-address-full {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    word-break: break-all;
+    cursor: default;
+    color: #888;
+}
+
+.wallet-address-full:hover {
+    background: none;
+}
+
+.wallet-disconnect-btn {
+    color: #e74c3c;
+}
+
+.wallet-disconnect-btn i {
+    color: #e74c3c;
+}
+
+.wallet-disconnect-btn:hover {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.wallet-dropdown-divider {
+    height: 1px;
+    background: rgba(46, 204, 113, 0.2);
+    margin: 0.5rem 0;
+}
+
+/* Copy Toast Notification */
+.copy-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.copy-toast i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .connect-wallet-btn {
+        min-width: 140px;
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .wallet-connected-btn {
+        min-width: 140px;
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .wallet-dropdown-menu {
+        min-width: 260px;
+        right: -10px;
+    }
+    
+    .wallet-address-full {
+        font-size: 0.7rem;
+    }
+    
+    .copy-toast {
+        bottom: 20px;
+        padding: 0.85rem 1.25rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 100px;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.hero-content {
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    font-family: 'Orbitron', monospace;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    text-shadow:
+        0 0 10px rgba(46, 204, 113, 0.5),
+        0 0 20px rgba(46, 204, 113, 0.3),
+        2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.highlight {
+    background: linear-gradient(45deg, #00ff88, #2ecc71, #27ae60);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        filter: drop-shadow(0 0 5px rgba(46, 204, 113, 0.5));
+    }
+
+    to {
+        filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.8));
+    }
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #b0b0b0;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* Hide mobile-only wallet button on desktop */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: flex;
+    }
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(46, 204, 113, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 10px 30px rgba(46, 204, 113, 0.3),
+        0 0 20px rgba(46, 204, 113, 0.2),
+        inset 0 1px 0 rgba(46, 204, 113, 0.2);
+    border-color: rgba(46, 204, 113, 0.5);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-content h3 {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2ecc71;
+    margin-bottom: 0.25rem;
+}
+
+.stat-change {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+
+
+/* Contract Address Display */
+.contract-address-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e67e22;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    word-break: break-all;
+    line-height: 1.3;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.contract-address-display:hover {
+    color: #d35400;
+    text-shadow: 0 0 10px rgba(230, 126, 34, 0.3);
+}
+
+/* Show full address on desktop, short on mobile */
+.address-short {
+    display: none;
+}
+
+.address-full {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .address-short {
+        display: inline;
+    }
+    
+    .address-full {
+        display: none;
+    }
+    
+    .contract-address-display {
+        font-size: 1.2rem;
+    }
+}
+
+/* Floating Elements */
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.crypto-icon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #2ecc71;
+    animation: float 6s ease-in-out infinite;
+}
+
+.crypto-icon.ethereum {
+    top: 20%;
+    right: 10%;
+    animation-delay: 0s;
+}
+
+.crypto-icon.bitcoin {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.crypto-icon.center-logo {
+    top: 50%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background: rgba(46, 204, 113, 0.2);
+    animation-delay: 4s;
+}
+
+.center-logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Section Styles */
+.section {
+    padding: 5rem 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #00ff88, #2ecc71, #27ae60);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #b0b0b0;
+}
+
+/* Inline Contract Rules (in section header) */
+.contract-rules-inline {
+    margin-top: 0.5rem;
+}
+
+.rules-header-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.rules-subtitle {
+    color: #b0b0b0;
+    font-size: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.3s ease;
+}
+
+.rules-header-inline:hover .rules-subtitle {
+    color: #2ecc71;
+}
+
+.toggle-btn-inline {
+    background: rgba(46, 204, 113, 0.15);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #2ecc71;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.toggle-btn-inline:hover {
+    background: rgba(46, 204, 113, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+.toggle-btn-inline i {
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn-inline.rotated i {
+    transform: rotate(180deg);
+}
+
+.rules-content-inline {
+    list-style: none;
+    padding: 1rem 1.5rem;
+    margin: 0.5rem 0 0 0;
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    opacity: 1;
+    background: rgba(46, 204, 113, 0.03);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 10px;
+}
+
+.rules-content-inline.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0 1.5rem;
+    border-color: transparent;
+}
+
+.rules-content-inline li {
+    color: #d0d0d0;
+    margin-bottom: 0.8rem;
+    padding-left: 0;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.rules-content-inline li:last-child {
+    margin-bottom: 0;
+}
+
+.rules-content-inline li i {
+    color: #2ecc71;
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.rules-content-inline strong {
+    color: #ffffff;
+}
+
+/* Airdrop Section */
+.airdrop-container {
+    display: flex;
+    justify-content: center;
+}
+
+.airdrop-card {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(46, 204, 113, 0.4);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(46, 204, 113, 0.1),
+        inset 0 1px 0 rgba(46, 204, 113, 0.1);
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.babt-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+.airdrop-info {
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.label {
+    color: #b0b0b0;
+}
+
+.value {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 20px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.claim-btn,
+.buy-btn,
+.stake-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.claim-btn:hover,
+.buy-btn:hover,
+.stake-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.claim-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Presale Section */
+.presale-card {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(46, 204, 113, 0.4);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(46, 204, 113, 0.1),
+        inset 0 1px 0 rgba(46, 204, 113, 0.1);
+}
+
+.presale-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.stat h4 {
+    color: #b0b0b0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.stat p {
+    color: #2ecc71;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.presale-progress {
+    margin-bottom: 2rem;
+}
+
+.progress-label {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #b0b0b0;
+    font-size: 0.9rem;
+}
+
+.purchase-form {
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #b0b0b0;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #2ecc71;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+.calculation {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(46, 204, 113, 0.1);
+    border-radius: 10px;
+}
+
+.nft-bonus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    color: #ffd700;
+    font-size: 0.9rem;
+}
+
+.user-contribution {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.contribution-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+/* Mining Section */
+.mining-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.mining-stat {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 15px;
+}
+
+.mining-stat h4 {
+    color: #b0b0b0;
+    margin-bottom: 1rem;
+}
+
+.mining-stat p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.mining-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.mining-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.mining-card h3 {
+    margin-bottom: 1.5rem;
+    color: #2ecc71;
+}
+
+.stake-info,
+.rewards-info {
+    margin-bottom: 1.5rem;
+}
+
+.stake-info p,
+.rewards-info p {
+    margin-bottom: 0.5rem;
+    color: #b0b0b0;
+}
+
+.reward-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.halving-progress {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+}
+
+.halving-progress h4 {
+    margin-bottom: 1rem;
+    color: #2ecc71;
+}
+
+/* About Section */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1rem;
+}
+
+.feature-card h3 {
+    margin-bottom: 1rem;
+    color: #2ecc71;
+}
+
+.feature-card p {
+    color: #b0b0b0;
+    line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(46, 204, 113, 0.3);
+    padding: 3rem 0 1rem;
+    box-shadow: 0 -4px 20px rgba(46, 204, 113, 0.1);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+    margin-bottom: 1rem;
+    color: #2ecc71;
+}
+
+.footer-section a {
+    display: block;
+    color: #b0b0b0;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #2ecc71;
+}
+
+.footer-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(46, 204, 113, 0.2);
+    color: #888;
+}
+
+/* Mobile Connect Wallet Button */
+.mobile-connect {
+    display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.4rem 0;
+        transition: transform 0.3s ease;
+    }
+
+    .navbar.nav-hidden {
+        transform: translateY(-100%);
+    }
+
+    .nav-container {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding: 0 1rem;
+        gap: 0.5rem;
+        min-height: 55px;
+    }
+
+    .nav-logo {
+        flex: 1;
+        justify-content: flex-start;
+        gap: 0.4rem;
+    }
+
+    .logo-img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-text {
+        font-size: 1rem;
+    }
+
+    /* 手机端：隐藏汉堡菜单和导航菜单 */
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+
+    .nav-menu {
+        display: none !important;
+    }
+
+    /* 手机端：显示钱包按钮在右上角 */
+    .nav-actions {
+        display: flex !important;
+    }
+    
+    .connect-wallet-btn {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+        min-width: 140px;
+    }
+
+    .hero {
+        padding-top: 70px;
+        min-height: auto;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 1rem 1rem 2rem;
+        gap: 2rem;
+    }
+
+    .hero-title {
+        font-size: 1.6rem;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+
+    .stat-content h3 {
+        font-size: 0.85rem;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+    }
+
+    .presale-stats,
+    .mining-overview {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .mining-cards,
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .contribution-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Contract Rules Mobile Optimization */
+    .rules-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .toggle-btn-inline {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+
+    .rules-content-inline {
+        padding: 0.8rem 1rem;
+    }
+
+    .rules-content-inline li {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .section {
+        padding: 3rem 0;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .airdrop-card,
+    .presale-card,
+    .mining-card {
+        padding: 1.5rem;
+    }
+
+    /* Floating elements - hide on mobile for better performance */
+    .floating-elements {
+        display: none;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .nav-link {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+}
+
+/* Animations */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-green {
+    color: #2ecc71;
+}
+
+.text-gold {
+    color: #ffd700;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* BSC Logo Styling */
+.crypto-icon.bsc {
+    top: 15%;
+    right: 25%;
+    animation-delay: 3s;
+    background: rgba(243, 186, 47, 0.1);
+    border-color: rgba(243, 186, 47, 0.3);
+}
+
+.bsc-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #f3ba2f;
+    text-shadow: 0 0 10px rgba(243, 186, 47, 0.5);
+}
+
+/* Ver
+ification Section */
+.verification-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(29, 161, 242, 0.3);
+    border-radius: 15px;
+}
+
+.verification-section h4 {
+    color: #1da1f2;
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', monospace;
+}
+
+.verification-note {
+    color: #b0b0b0;
+    margin-bottom: 1rem;
+}
+
+.verification-steps {
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.verification-steps li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.verification-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.verify-btn {
+    flex: 1;
+    background: linear-gradient(45deg, #1da1f2, #0d8bd9);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.verify-btn.secondary {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+}
+
+.verify-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(29, 161, 242, 0.4);
+}
+
+.verify-btn.secondary:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.verify-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+/* Quic
+/* Amount Selection Buttons */
+.quick-amount-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.amount-btn {
+    padding: 16px 12px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid #2ecc71;
+    border-radius: 12px;
+    color: #2ecc71;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.amount-btn .amount-value {
+    font-size: 1rem;
+    font-weight: 700;
+    display: block;
+}
+
+.amount-btn .amount-receive,
+.amount-btn .amount-apy {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #888;
+    display: block;
+}
+
+.amount-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(46, 204, 113, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+}
+
+.amount-btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.amount-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #000;
+    border-color: #27ae60;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+}
+
+.amount-btn:hover:not(:disabled) .amount-receive,
+.amount-btn:hover:not(:disabled) .amount-apy {
+    color: #000;
+}
+
+.amount-btn:hover:not(:disabled)::before {
+    width: 300px;
+    height: 300px;
+}
+
+.amount-btn:active:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.amount-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: #555;
+    color: #666;
+}
+
+.amount-btn.selected {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #000;
+    border-color: #27ae60;
+    box-shadow: 0 0 25px rgba(46, 204, 113, 0.7);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.amount-btn.selected .amount-receive,
+.amount-btn.selected .amount-apy {
+    color: #000;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(46, 204, 113, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(46, 204, 113, 0.9);
+    }
+}
+
+/* Responsive Amount Buttons */
+@media (max-width: 768px) {
+    .quick-amount-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .amount-btn {
+        padding: 14px 10px;
+    }
+    
+    .amount-btn .amount-value {
+        font-size: 0.9rem;
+    }
+    
+    .amount-btn .amount-receive,
+    .amount-btn .amount-apy {
+        font-size: 0.7rem;
+    }
+}
+/* NFT Display Panel Styles */
+.nft-display-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+}
+
+.nft-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.nft-panel-header h4 {
+    color: #2ecc71;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nft-count {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.nft-panel-content {
+    min-height: 120px;
+}
+
+/* Empty State */
+.nft-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    text-align: center;
+    color: #888;
+}
+
+.nft-empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.nft-empty-state p {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #aaa;
+}
+
+.nft-empty-state small {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* NFT Card Mini */
+.nft-card-mini {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.nft-image-mini {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+}
+
+.nft-image-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nft-badge-mini {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #2ecc71;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid #2ecc71;
+}
+
+.nft-info-mini {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nft-name-mini {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.nft-attributes-mini {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.nft-attr-mini {
+    background: rgba(46, 204, 113, 0.1);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-left: 2px solid #2ecc71;
+}
+
+.nft-attr-mini .attr-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.nft-attr-mini .attr-value {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.nft-soulbound {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #f39c12;
+    padding: 6px 10px;
+    background: rgba(243, 156, 18, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.nft-soulbound i {
+    font-size: 0.75rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nft-card-mini {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .nft-image-mini {
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+        aspect-ratio: 1;
+    }
+    
+    .nft-info-mini {
+        width: 100%;
+    }
+    
+    .nft-attributes-mini {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .nft-display-panel {
+        padding: 15px;
+    }
+    
+    .nft-panel-header h4 {
+        font-size: 1rem;
+    }
+    
+    .nft-image-mini {
+        max-width: 150px;
+    }
+}
+
+/* Contract Address Display */
+.contract-address-display {
+    margin-top: 15px;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0;
+    display: block;
+    font-size: 14px;
+}
+
+.contract-address-display i {
+    color: #2ecc71;
+    font-size: 16px;
+}
+
+.contract-address-display .address-label {
+    color: #ecf0f1;
+    font-weight: 600;
+}
+
+.contract-address-display .address-link {
+    color: #3498db;
+    text-decoration: none;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    word-break: break-all;
+    flex: 1;
+    min-width: 200px;
+}
+
+.contract-address-display .address-link:hover {
+    color: #5dade2;
+    text-decoration: underline;
+}
+
+.copy-address-btn {
+    background: rgba(52, 152, 219, 0.2);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    color: #3498db;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.copy-address-btn:hover {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+.copy-address-btn:active {
+    transform: translateY(0);
+}
+
+.copy-address-btn i {
+    margin-right: 5px;
+}
+
+/* Inline copy button for rules */
+.copy-btn-inline {
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    color: #3498db;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.copy-btn-inline:hover {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: #3498db;
+    transform: scale(1.05);
+}
+
+.copy-btn-inline:active {
+    transform: scale(0.95);
+}
+
+.copy-btn-inline i {
+    font-size: 11px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .contract-address-display {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .contract-address-display .address-link {
+        width: 100%;
+        font-size: 11px;
+    }
+    
+    .copy-address-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Token Contract Info - Compact Design */
+.token-contract-info {
+    margin-top: 50px;
+    padding: 0;
+}
+
+.token-info-compact {
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 12px;
+    padding: 20px 25px;
+    transition: all 0.3s ease;
+}
+
+.token-info-compact:hover {
+    border-color: rgba(46, 204, 113, 0.4);
+    background: rgba(46, 204, 113, 0.08);
+}
+
+.token-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.token-header i {
+    color: #2ecc71;
+    font-size: 18px;
+}
+
+.token-name {
+    color: #ecf0f1;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.token-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.token-address {
+    color: #3498db;
+    text-decoration: none;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    word-break: break-all;
+    flex: 1;
+    transition: color 0.2s ease;
+}
+
+.token-address:hover {
+    color: #5dade2;
+    text-decoration: underline;
+}
+
+.copy-btn-compact {
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    color: #3498db;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.copy-btn-compact:hover {
+    background: rgba(52, 152, 219, 0.25);
+    border-color: #3498db;
+    transform: scale(1.05);
+}
+
+.copy-btn-compact:active {
+    transform: scale(0.95);
+}
+
+.token-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #95a5a6;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-item i {
+    font-size: 11px;
+    color: #7f8c8d;
+}
+
+.stat-divider {
+    color: #7f8c8d;
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .token-contract-info {
+        margin-top: 30px;
+    }
+    
+    .token-info-compact {
+        padding: 15px 20px;
+    }
+    
+    .token-name {
+        font-size: 14px;
+    }
+    
+    .token-address {
+        font-size: 12px;
+    }
+    
+    .token-stats {
+        font-size: 12px;
+    }
+    
+    .copy-btn-compact {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+}
+
+/* Wallet Selection Modal */
+.wallet-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.wallet-modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wallet-modal-content {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+}
+
+.wallet-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.wallet-modal-header h2 {
+    color: #2ecc71;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.wallet-modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+.wallet-modal-close:hover {
+    color: #e74c3c;
+}
+
+.wallet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.wallet-option {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 80px;
+}
+
+.wallet-option:hover {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+    transform: translateX(5px);
+}
+
+.wallet-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.wallet-option.disabled:hover {
+    transform: none;
+    background: rgba(46, 204, 113, 0.1);
+    border-color: rgba(46, 204, 113, 0.3);
+}
+
+.wallet-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.wallet-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.wallet-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.wallet-info h3 {
+    margin: 0 0 5px 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.wallet-info p {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.wallet-badge {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .wallet-modal-content {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .wallet-modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .wallet-option {
+        padding: 15px;
+    }
+
+    .wallet-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+
+    .wallet-info h3 {
+        font-size: 1rem;
+    }
+
+    .wallet-info p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Token Contract Card Specific Styles */
+.stat-card .stat-value a {
+    color: #2ecc71;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
+
+.stat-card .stat-value a:hover {
+    color: #27ae60;
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+    transform: scale(1.05);
+}
+
+.stat-card h3 button {
+    background: transparent;
+    border: 1px solid #2ecc71;
+    color: #2ecc71;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat-card h3 button:hover {
+    background: #2ecc71;
+    color: #000;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+    transform: translateY(-2px);
+}
+
+.stat-card h3 button:active {
+    transform: translateY(0);
+}
+
+.stat-card .stat-icon img {
+    filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.3));
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon img {
+    filter: drop-shadow(0 0 20px rgba(46, 204, 113, 0.6));
+    transform: scale(1.1);
+}
