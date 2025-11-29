@@ -13,8 +13,7 @@ Solidity smart contracts for the Common Prosperity Coin ecosystem on Binance Sma
 | **Presale.sol** | NFT presale with CPC rewards | ✅ Deployed |
 | **Mining.sol** | CPC staking and rewards | ✅ Deployed |
 | **RewardNFT.sol** | ERC721 NFT with daily rewards | ✅ Deployed |
-| **CPCOTC.sol** | P2P trading platform | ⏳ Ready |
-| **CPCVoting.sol** | Community governance | ⏳ Ready |
+| **CPCOTC.sol** | P2P trading with monthly giveaways | ✅ Deployed |
 
 ### Supporting Contracts
 
@@ -68,7 +67,7 @@ npx hardhat coverage
 npx hardhat node
 
 # Deploy (in another terminal)
-npx hardhat run scripts/deploy-otc-voting.js --network localhost
+npx hardhat run scripts/deploy.js --network localhost
 ```
 
 ### BSC Testnet
@@ -79,13 +78,13 @@ cp .env.example .env
 # Add your PRIVATE_KEY and BSCSCAN_API_KEY
 
 # Deploy
-npx hardhat run scripts/deploy-otc-voting.js --network bscTestnet
+npx hardhat run scripts/deploy.js --network bscTestnet
 ```
 
 ### BSC Mainnet
 
 ```bash
-npx hardhat run scripts/deploy-otc-voting.js --network bsc
+npx hardhat run scripts/deploy.js --network bsc
 ```
 
 ## 🔍 Verification
@@ -124,16 +123,11 @@ Use the flattened contracts in `flattened/` directory for manual verification on
 - **Activation**: 2 USDT fee
 
 ### CPCOTC
-- **Creation Fee**: 0.001 BNB
-- **Trading Fee**: 0.2% (20/10000)
-- **Fee Destination**: Voting contract
+- **Creation Fee**: 0.001 BNB (paid by buyer)
+- **Trading Fee**: 0.2% (deducted from seller)
+- **Fee Destination**: Monthly X (Twitter) giveaway winners
 - **Features**: Buy/sell orders, partial fills
-
-### CPCVoting
-- **Round Duration**: 30 days
-- **Candidate Stake**: 1 CPC
-- **Voting**: Free (requires 1 CPC balance)
-- **Reward**: OTC fees for 30 days
+- **Giveaway**: Follow @icpc_cc on X to participate
 
 ## 🔒 Security
 

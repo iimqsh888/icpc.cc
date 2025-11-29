@@ -138,7 +138,6 @@ netlify deploy
 # Upload files to server
 scp -r dapp/* user@server:/var/www/cpc-dapp/
 scp -r otc/* user@server:/var/www/cpc-otc/
-scp -r voting/* user@server:/var/www/cpc-voting/
 
 # Configure nginx
 sudo nano /etc/nginx/sites-available/cpc
@@ -159,11 +158,6 @@ server {
         alias /var/www/cpc-otc;
         index otc.html;
     }
-    
-    location /voting {
-        alias /var/www/cpc-voting;
-        index voting.html;
-    }
 }
 ```
 
@@ -176,7 +170,6 @@ npm install -g ipfs
 # Add to IPFS
 ipfs add -r dapp/
 ipfs add -r otc/
-ipfs add -r voting/
 
 # Pin to Pinata or other service
 ```
@@ -222,9 +215,7 @@ ipfs add -r voting/
    - Fill order
    - Cancel order
 
-3. **Voting**
-   - Become candidate
-   - Cast vote
+
    - View leaderboard
    - Claim revenue (after round)
 
@@ -279,17 +270,14 @@ Network: BSC Mainnet
 Deployer: 0x...
 
 Contracts:
-- Voting: 0x...
-- OTC: 0x...
+- OTC: 0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082
 
 Verification:
-- Voting: ✅ Verified
 - OTC: ✅ Verified
 
 Frontend:
-- DApp: https://...
-- OTC: https://.../otc
-- Voting: https://.../voting
+- DApp: https://icpc.cc
+- OTC: https://icpc.cc/otc/ui/otc.html
 
 Status: ✅ Live
 ```

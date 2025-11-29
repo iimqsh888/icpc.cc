@@ -115,10 +115,10 @@ Use clear, descriptive commit messages:
 
 ```
 feat: add partial fill support to OTC
-fix: resolve voting round calculation bug
+fix: resolve OTC order matching bug
 docs: update deployment guide
 test: add comprehensive OTC tests
-refactor: optimize gas usage in voting
+refactor: optimize gas usage in OTC
 ```
 
 Prefixes:

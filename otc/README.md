@@ -35,8 +35,8 @@ Open `otc.html` in a web browser with MetaMask installed.
 
 | Fee Type | Amount | Destination |
 |----------|--------|-------------|
-| Order Creation | 0.001 BNB | Voting Contract |
-| Trading Fee | 0.2% of trade value | Voting Contract |
+| Order Creation | 0.001 BNB (paid by buyer) | Monthly X Giveaway Winner |
+| Trading Fee | 0.2% of trade value (deducted from seller) | Monthly X Giveaway Winner |
 
 ## 🔧 Configuration
 

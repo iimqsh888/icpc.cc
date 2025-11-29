@@ -162,61 +162,6 @@ Complete guide for using the Common Prosperity Coin ecosystem.
 4. Confirm transaction
 5. Receive refund
 
-## 🗳️ Voting System
-
-### Become a Candidate
-
-**Compete for OTC revenue**
-
-**Requirements:**
-- 1 CPC stake
-- Stake returned after round
-
-**Steps:**
-1. Visit Voting platform
-2. Click "Become Candidate"
-3. Approve 1 CPC
-4. Confirm transaction
-5. You're now a candidate!
-
-### Vote
-
-**Support your favorite candidate**
-
-**Requirements:**
-- Hold at least 1 CPC
-- One vote per round
-- Cannot vote for yourself
-
-**Steps:**
-1. Visit Voting platform
-2. View leaderboard
-3. Select candidate
-4. Click "Vote"
-5. Confirm transaction (free, only gas)
-
-### Claim Revenue Right
-
-**Winners only**
-
-**Steps:**
-1. Wait for round to end (30 days)
-2. Click "Claim Revenue Right"
-3. Confirm transaction
-4. Receive accumulated fees
-5. Start receiving real-time OTC fees
-
-### Withdraw Stake
-
-**After round ends**
-
-**Steps:**
-1. Go to "Withdraw Stakes"
-2. Select round
-3. Click "Withdraw"
-4. Confirm transaction
-5. Receive 1 CPC back
-
 ## 📊 Understanding Fees
 
 ### OTC Platform

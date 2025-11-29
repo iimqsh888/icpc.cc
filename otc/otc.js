@@ -1,5 +1,5 @@
-// CPC OTC DApp
-console.log('OTC.js loaded successfully');
+// CPC OTC DApp - Uses same wallet logic as main DApp
+console.log('💱 OTC.js loaded successfully');
 
 let web3;
 let userAccount;
@@ -10,7 +10,7 @@ let updateInterval;
 
 // Contract Configuration
 const CONFIG = {
-    OTC_CONTRACT: '0x309466E8c4d3aedC86cEAbA83652f19f6613737e',
+    OTC_CONTRACT: '0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082',
     CPC_TOKEN: '0x5453C25CA8a0aFd9C6e73FF8c8C6Fe299D7F60C9',
     CHAIN_ID: 56,
     CHAIN_NAME: 'BSC Mainnet',
@@ -30,104 +30,8 @@ const BSC_CONFIG = {
     blockExplorerUrls: ['https://bscscan.com/']
 };
 
-// Contract ABIs - 标准JSON格式
-const OTC_ABI = [
-    {
-        "inputs": [],
-        "name": "getActiveOrderCount",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "offset", "type": "uint256"},
-            {"internalType": "uint256", "name": "limit", "type": "uint256"}
-        ],
-        "name": "getActiveOrders",
-        "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "name": "orders",
-        "outputs": [
-            {"internalType": "uint256", "name": "orderId", "type": "uint256"},
-            {"internalType": "address", "name": "creator", "type": "address"},
-            {"internalType": "bool", "name": "isBuyOrder", "type": "bool"},
-            {"internalType": "uint256", "name": "tokenAmount", "type": "uint256"},
-            {"internalType": "uint256", "name": "pricePerToken", "type": "uint256"},
-            {"internalType": "uint256", "name": "totalValue", "type": "uint256"},
-            {"internalType": "bool", "name": "isActive", "type": "bool"},
-            {"internalType": "uint256", "name": "createdAt", "type": "uint256"}
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "user", "type": "address"}],
-        "name": "getUserOrders",
-        "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "ORDER_CREATION_FEE",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "TRADE_FEE_PERCENT",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "tokenAmount", "type": "uint256"},
-            {"internalType": "uint256", "name": "pricePerToken", "type": "uint256"}
-        ],
-        "name": "createBuyOrder",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "tokenAmount", "type": "uint256"},
-            {"internalType": "uint256", "name": "pricePerToken", "type": "uint256"}
-        ],
-        "name": "createSellOrder",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "orderId", "type": "uint256"}],
-        "name": "fillBuyOrder",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "orderId", "type": "uint256"}],
-        "name": "fillSellOrder",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "orderId", "type": "uint256"}],
-        "name": "cancelOrder",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
-];
+// Contract ABIs - Loaded from external JSON files via HTML
+// OTC_ABI and CPC_ABI are loaded in otc.html
 
 const ERC20_ABI = [
     {
@@ -166,43 +70,71 @@ let currentOrderType = 'buy';
 
 // Initialize
 window.addEventListener('load', async () => {
-    await initWeb3();
     setupEventListeners();
     setupOrderTypeTabs();
     setupWalletModal();
+    setupRulesToggle();
+    await initWeb3();
 });
 
 // Initialize Web3
+let initRetryCount = 0;
+const MAX_INIT_RETRIES = 50; // Max 5 seconds
+
 async function initWeb3() {
     try {
-        walletConnector = new WalletConnector();
-        console.log('Wallet connector initialized');
-
+        // Check if Web3 is loaded
         if (typeof Web3 === 'undefined') {
-            console.warn('Web3 library not loaded yet');
-            updateWalletUI();
+            initRetryCount++;
+            if (initRetryCount < MAX_INIT_RETRIES) {
+                console.log(`Waiting for Web3... (${initRetryCount}/${MAX_INIT_RETRIES})`);
+                setTimeout(initWeb3, 100);
+                return;
+            } else {
+                console.error('Web3 library failed to load after 5 seconds');
+                showToast('Failed to load Web3 library. Please refresh the page.', 'error');
+                return;
+            }
+        }
+
+        // Check if WalletConnector is loaded
+        if (typeof WalletConnector === 'undefined') {
+            console.error('WalletConnector class not found');
+            showToast('Wallet connector failed to load. Please refresh the page.', 'error');
             return;
         }
 
-        // 尝试重新连接之前的钱包
-        const storedWalletType = localStorage.getItem('otc_wallet_type');
-        if (storedWalletType) {
+        walletConnector = new WalletConnector();
+        console.log('Wallet connector initialized');
+
+        // Check for stored wallet connection from any page
+        const storedWalletType = localStorage.getItem('cc_wallet_type') || 
+                                 localStorage.getItem('voting_wallet_type') || 
+                                 localStorage.getItem('otc_wallet_type');
+
+        // Auto-detect MetaMask connection
+        if (typeof window.ethereum !== 'undefined') {
             try {
-                if (storedWalletType === 'metamask' && typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0 && storedWalletType) {
+                    // Already connected, use existing connection
                     web3 = new Web3(window.ethereum);
-                    const accounts = await web3.eth.getAccounts();
-                    if (accounts.length > 0) {
-                        userAccount = accounts[0];
-                        walletConnector.provider = window.ethereum;
-                        walletConnector.web3 = web3;
-                        walletConnector.walletType = storedWalletType;
-                        console.log('Reconnected to MetaMask:', userAccount);
-                        await initContracts();
-                    }
+                    userAccount = accounts[0];
+                    walletConnector.provider = window.ethereum;
+                    walletConnector.web3 = web3;
+                    walletConnector.walletType = 'metamask';
+                    console.log('Auto-connected to MetaMask:', userAccount);
+                    
+                    // Sync wallet type across all pages
+                    localStorage.setItem('otc_wallet_type', 'metamask');
+                    
+                    await initContracts();
+                    updateWalletUI();
+                    setupWalletEventListeners();
+                    return;
                 }
             } catch (error) {
-                console.log('Failed to reconnect:', error);
-                localStorage.removeItem('otc_wallet_type');
+                console.log('Auto-connect failed, manual connection required');
             }
         }
 
@@ -217,7 +149,15 @@ async function initWeb3() {
 
 // Initialize Contracts
 async function initContracts() {
-    if (!web3 || !CONFIG.OTC_CONTRACT) return;
+    if (!web3) {
+        console.warn('Web3 not initialized');
+        return;
+    }
+    
+    if (!CONFIG.OTC_CONTRACT) {
+        console.warn('OTC contract address not configured');
+        return;
+    }
     
     try {
         otcContract = new web3.eth.Contract(OTC_ABI, CONFIG.OTC_CONTRACT);
@@ -236,10 +176,15 @@ async function initContracts() {
 
 // Setup Event Listeners
 function setupEventListeners() {
-    document.getElementById('connectWalletBtn').addEventListener('click', () => showWalletModal());
-    document.getElementById('disconnectBtn').addEventListener('click', disconnectWallet);
-    document.getElementById('createOrderBtn').addEventListener('click', createOrder);
-    document.getElementById('refreshOrders').addEventListener('click', loadAllData);
+    const connectBtn = document.getElementById('connectWallet');
+    const createBtn = document.getElementById('createOrderBtn');
+    
+    if (connectBtn) {
+        connectBtn.addEventListener('click', () => showWalletModal());
+    }
+    if (createBtn) {
+        createBtn.addEventListener('click', createOrder);
+    }
 }
 
 // Setup Wallet Modal
@@ -302,7 +247,11 @@ async function connectWallet(walletType = null) {
         }
 
         console.log('Wallet connected:', userAccount);
+        
+        // Store wallet type across all pages for sync
         localStorage.setItem('otc_wallet_type', walletType);
+        localStorage.setItem('cc_wallet_type', walletType);
+        localStorage.setItem('voting_wallet_type', walletType);
 
         await ensureBSCNetwork();
         await initContracts();
@@ -341,7 +290,11 @@ function disconnectWallet() {
         updateInterval = null;
     }
     
+    // Clear wallet type from all pages
     localStorage.removeItem('otc_wallet_type');
+    localStorage.removeItem('cc_wallet_type');
+    localStorage.removeItem('voting_wallet_type');
+    
     updateWalletUI();
     showToast('Wallet disconnected', 'info');
 }
@@ -407,7 +360,7 @@ function setupWalletEventListeners() {
 
 // Update Wallet UI
 function updateWalletUI() {
-    const connectBtn = document.getElementById('connectWalletBtn');
+    const connectBtn = document.getElementById('connectWallet');
     const walletInfo = document.getElementById('walletInfo');
     const walletAddress = document.getElementById('walletAddress');
 
@@ -437,14 +390,109 @@ async function loadAllData() {
 
 // Load Orders
 async function loadOrders() {
-    // TODO: 实现订单加载
-    console.log('Loading orders...');
+    if (!otcContract) return;
+    
+    try {
+        const activeCount = await otcContract.methods.getActiveOrderCount().call();
+        document.getElementById('activeOrders').textContent = activeCount;
+        
+        const orderIds = await otcContract.methods.getActiveOrders(0, 50).call();
+        const tbody = document.getElementById('orderTableBody');
+        tbody.innerHTML = '';
+        
+        if (orderIds.length === 0) {
+            tbody.innerHTML = '<tr class="no-orders"><td colspan="7"><i class="fas fa-inbox"></i><p>No active orders</p></td></tr>';
+            return;
+        }
+        
+        for (const orderId of orderIds) {
+            const order = await otcContract.methods.orders(orderId).call();
+            if (!order.isActive) continue;
+            
+            const row = document.createElement('tr');
+            const isBuy = order.isBuyOrder;
+            const tokenAmount = web3.utils.fromWei(order.remainingAmount, 'ether');
+            const pricePerToken = web3.utils.fromWei(order.pricePerToken, 'ether');
+            const totalValue = (parseFloat(tokenAmount) * parseFloat(pricePerToken)).toFixed(6);
+            
+            row.innerHTML = `
+                <td data-label="Type"><span class="order-type ${isBuy ? 'buy' : 'sell'}">${isBuy ? 'BUY' : 'SELL'}</span></td>
+                <td data-label="Amount">${parseFloat(tokenAmount).toFixed(2)} CPC</td>
+                <td data-label="Price">${parseFloat(pricePerToken).toFixed(6)} BNB</td>
+                <td data-label="Total">${totalValue} BNB</td>
+                <td data-label="Creator">${formatAddress(order.creator)}</td>
+                <td data-label="Time">${new Date(order.createdAt * 1000).toLocaleString()}</td>
+                <td>
+                    ${order.creator.toLowerCase() === userAccount.toLowerCase() 
+                        ? `<button class="btn-cancel" onclick="cancelOrder(${orderId})">Cancel</button>`
+                        : `<button class="btn-fill" onclick="fillOrder(${orderId}, ${isBuy})">Fill</button>`
+                    }
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+        
+        await loadMyOrders();
+    } catch (error) {
+        console.error('Error loading orders:', error);
+    }
+}
+
+// Load My Orders
+async function loadMyOrders() {
+    if (!otcContract || !userAccount) return;
+    
+    try {
+        const myOrderIds = await otcContract.methods.getUserOrders(userAccount).call();
+        const container = document.getElementById('myOrdersContainer');
+        container.innerHTML = '';
+        
+        if (myOrderIds.length === 0) {
+            container.innerHTML = '<div class="no-orders"><i class="fas fa-inbox"></i><p>You haven\'t created any orders yet</p></div>';
+            return;
+        }
+        
+        for (const orderId of myOrderIds) {
+            const order = await otcContract.methods.orders(orderId).call();
+            const isBuy = order.isBuyOrder;
+            const tokenAmount = web3.utils.fromWei(order.tokenAmount, 'ether');
+            const remaining = web3.utils.fromWei(order.remainingAmount, 'ether');
+            const pricePerToken = web3.utils.fromWei(order.pricePerToken, 'ether');
+            
+            const orderCard = document.createElement('div');
+            orderCard.className = 'my-order-card';
+            orderCard.innerHTML = `
+                <div class="order-header">
+                    <span class="order-type ${isBuy ? 'buy' : 'sell'}">${isBuy ? 'BUY' : 'SELL'}</span>
+                    <span class="order-status ${order.isActive ? 'active' : 'completed'}">${order.isActive ? 'Active' : 'Completed'}</span>
+                </div>
+                <div class="order-details">
+                    <p>Amount: ${parseFloat(tokenAmount).toFixed(2)} CPC</p>
+                    <p>Remaining: ${parseFloat(remaining).toFixed(2)} CPC</p>
+                    <p>Price: ${parseFloat(pricePerToken).toFixed(6)} BNB</p>
+                </div>
+                ${order.isActive ? `<button class="btn-cancel" onclick="cancelOrder(${orderId})">Cancel Order</button>` : ''}
+            `;
+            container.appendChild(orderCard);
+        }
+    } catch (error) {
+        console.error('Error loading my orders:', error);
+    }
 }
 
 // Load User Balance
 async function loadUserBalance() {
-    // TODO: 实现余额加载
-    console.log('Loading user balance...');
+    if (!cpcContract || !userAccount) return;
+    
+    try {
+        const balance = await cpcContract.methods.balanceOf(userAccount).call();
+        const bnbBalance = await web3.eth.getBalance(userAccount);
+        
+        console.log('CPC Balance:', web3.utils.fromWei(balance, 'ether'));
+        console.log('BNB Balance:', web3.utils.fromWei(bnbBalance, 'ether'));
+    } catch (error) {
+        console.error('Error loading balance:', error);
+    }
 }
 
 // Create Order
@@ -453,33 +501,274 @@ async function createOrder() {
         showToast('Please connect wallet first', 'error');
         return;
     }
+    
+    const amount = document.getElementById('orderAmount').value;
+    const price = document.getElementById('orderPrice').value;
+    const isBuy = document.querySelector('.tab-btn.active').dataset.type === 'buy';
+    
+    const amountNum = parseFloat(amount);
+    if (!amount || !price || amountNum < 1 || !Number.isInteger(amountNum)) {
+        showToast('Please enter valid amount (must be whole number, min 1 CPC) and price', 'error');
+        return;
+    }
+    
+    showLoading(isBuy ? 'Creating buy order...' : 'Creating sell order...');
+    
+    try {
+        const amountWei = web3.utils.toWei(amount, 'ether');
+        const priceWei = web3.utils.toWei(price, 'ether');
+        const totalValue = (parseFloat(amount) * parseFloat(price)).toFixed(6);
+        const totalValueWei = web3.utils.toWei(totalValue, 'ether');
+        
+        if (isBuy) {
+            const totalRequired = parseFloat(totalValue) + 0.001;
+            const tx = await otcContract.methods.createBuyOrder(amountWei, priceWei).send({
+                from: userAccount,
+                value: web3.utils.toWei(totalRequired.toString(), 'ether')
+            });
+            console.log('Buy order created:', tx);
+        } else {
+            // Approve CPC first
+            const allowance = await cpcContract.methods.allowance(userAccount, CONFIG.OTC_CONTRACT).call();
+            if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                showLoading('Approving CPC...');
+                await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, amountWei).send({ from: userAccount });
+            }
+            
+            showLoading('Creating sell order...');
+            const tx = await otcContract.methods.createSellOrder(amountWei, priceWei).send({
+                from: userAccount,
+                value: web3.utils.toWei('0.001', 'ether')
+            });
+            console.log('Sell order created:', tx);
+        }
+        
+        showToast('Order created successfully!', 'success');
+        document.getElementById('orderAmount').value = '';
+        document.getElementById('orderPrice').value = '';
+        await loadAllData();
+        
+    } catch (error) {
+        console.error('Error creating order:', error);
+        showToast('Failed to create order: ' + (error.message || 'Unknown error'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
 
-    // TODO: 实现创建订单逻辑
-    showToast('Create order functionality coming soon', 'info');
+// Fill Order
+async function fillOrder(orderId, isBuyOrder) {
+    if (!otcContract || !userAccount) {
+        showToast('Please connect wallet first', 'error');
+        return;
+    }
+    
+    showLoading('Filling order...');
+    
+    try {
+        const order = await otcContract.methods.orders(orderId).call();
+        
+        if (isBuyOrder) {
+            // Filling a buy order (seller provides CPC)
+            const amount = order.remainingAmount;
+            const allowance = await cpcContract.methods.allowance(userAccount, CONFIG.OTC_CONTRACT).call();
+            
+            if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amount))) {
+                showLoading('Approving CPC...');
+                await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, amount).send({ from: userAccount });
+            }
+            
+            showLoading('Filling buy order...');
+            const tx = await otcContract.methods.fillBuyOrder(orderId, 0).send({ from: userAccount });
+            console.log('Buy order filled:', tx);
+        } else {
+            // Filling a sell order (buyer provides BNB)
+            const totalValue = (order.totalValue * order.remainingAmount) / order.tokenAmount;
+            const tx = await otcContract.methods.fillSellOrder(orderId, 0).send({
+                from: userAccount,
+                value: totalValue
+            });
+            console.log('Sell order filled:', tx);
+        }
+        
+        showToast('Order filled successfully!', 'success');
+        await loadAllData();
+        
+    } catch (error) {
+        console.error('Error filling order:', error);
+        showToast('Failed to fill order: ' + (error.message || 'Unknown error'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Cancel Order
+async function cancelOrder(orderId) {
+    if (!otcContract || !userAccount) {
+        showToast('Please connect wallet first', 'error');
+        return;
+    }
+    
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+    
+    showLoading('Cancelling order...');
+    
+    try {
+        const tx = await otcContract.methods.cancelOrder(orderId).send({ from: userAccount });
+        console.log('Order cancelled:', tx);
+        showToast('Order cancelled successfully!', 'success');
+        await loadAllData();
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        showToast('Failed to cancel order: ' + (error.message || 'Unknown error'), 'error');
+    } finally {
+        hideLoading();
+    }
 }
 
 // Setup Order Type Tabs
 function setupOrderTypeTabs() {
-    const buyTab = document.getElementById('buyOrdersTab');
-    const sellTab = document.getElementById('sellOrdersTab');
-
-    if (buyTab) {
-        buyTab.addEventListener('click', () => {
-            currentOrderType = 'buy';
-            buyTab.classList.add('active');
-            if (sellTab) sellTab.classList.remove('active');
-            loadOrders();
+    const tabs = document.querySelectorAll('.tab-btn[data-type]');
+    const amountInput = document.getElementById('orderAmount');
+    const priceInput = document.getElementById('orderPrice');
+    const createBtn = document.getElementById('createOrderBtn');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentOrderType = tab.dataset.type;
+            updateOrderSummary();
         });
+    });
+    
+    // Update summary on input
+    if (amountInput) {
+        amountInput.addEventListener('input', updateOrderSummary);
     }
-
-    if (sellTab) {
-        sellTab.addEventListener('click', () => {
-            currentOrderType = 'sell';
-            sellTab.classList.add('active');
-            if (buyTab) buyTab.classList.remove('active');
-            loadOrders();
+    if (priceInput) {
+        priceInput.addEventListener('input', updateOrderSummary);
+    }
+    
+    // Enable/disable create button
+    function updateOrderSummary() {
+        const amount = parseFloat(amountInput?.value || 0);
+        const price = parseFloat(priceInput?.value || 0);
+        
+        if (amount >= 1 && price > 0) {
+            const totalValue = (amount * price).toFixed(6);
+            const totalRequired = (parseFloat(totalValue) + 0.001).toFixed(6);
+            
+            document.getElementById('totalValue').textContent = totalValue + ' BNB';
+            document.getElementById('totalRequired').textContent = totalRequired + ' BNB';
+            
+            if (createBtn) createBtn.disabled = false;
+        } else {
+            document.getElementById('totalValue').textContent = '0 BNB';
+            document.getElementById('totalRequired').textContent = '0.001 BNB';
+            if (createBtn) createBtn.disabled = true;
+        }
+    }
+    
+    // Setup filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // TODO: Implement filtering
         });
+    });
+}
+
+// Toggle Rules Function
+function toggleRules(section) {
+    const rulesContent = document.getElementById(`${section}-rules`);
+    const toggleBtn = document.getElementById(`${section}-toggle`);
+    
+    if (rulesContent && toggleBtn) {
+        const isCollapsed = rulesContent.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+            rulesContent.classList.remove('collapsed');
+            toggleBtn.classList.add('rotated');
+        } else {
+            rulesContent.classList.add('collapsed');
+            toggleBtn.classList.remove('rotated');
+        }
     }
+}
+
+// Copy Address Function
+function copyAddress(address) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(address).then(() => {
+            showCopySuccess();
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            fallbackCopy(address);
+        });
+    } else {
+        fallbackCopy(address);
+    }
+}
+
+// Show copy success message
+function showCopySuccess() {
+    const toast = document.createElement('div');
+    toast.className = 'copy-toast';
+    toast.innerHTML = '<i class="fas fa-check-circle"></i> Address copied to clipboard!';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 2000);
+}
+
+// Fallback copy method
+function fallbackCopy(address) {
+    const textarea = document.createElement('textarea');
+    textarea.value = address;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    
+    textarea.select();
+    textarea.setSelectionRange(0, 99999);
+    
+    try {
+        document.execCommand('copy');
+        showCopySuccess();
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+    
+    document.body.removeChild(textarea);
+}
+
+// Setup Rules Toggle
+function setupRulesToggle() {
+    const headers = document.querySelectorAll('.rules-header-inline');
+    
+    headers.forEach(header => {
+        const section = header.getAttribute('data-section');
+        
+        if (section) {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', function() {
+                toggleRules(section);
+            });
+            
+            // Initialize as collapsed
+            const rulesContent = document.getElementById(`${section}-rules`);
+            if (rulesContent) {
+                rulesContent.classList.add('collapsed');
+            }
+        }
+    });
 }
 
 // Utility Functions
@@ -510,4 +799,61 @@ function showToast(message, type = 'info') {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
+}
+
+
+// ============================================================================
+// Page Initialization
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 OTC page loaded, initializing...');
+    
+    // Hide loading overlay immediately
+    hideLoading();
+    
+    // Check for previously connected wallet
+    checkPreviousConnection();
+});
+
+// Check for previously connected wallet from localStorage
+async function checkPreviousConnection() {
+    const savedAddress = localStorage.getItem('connectedWallet');
+    const savedProvider = localStorage.getItem('walletProvider');
+    
+    if (savedAddress && savedProvider && window.ethereum) {
+        try {
+            const accounts = await window.ethereum.request({ 
+                method: 'eth_accounts' 
+            });
+            
+            if (accounts.length > 0 && accounts[0].toLowerCase() === savedAddress.toLowerCase()) {
+                // Wallet still connected, restore session
+                userAccount = accounts[0];
+                web3 = new Web3(window.ethereum);
+                
+                // Initialize contracts
+                otcContract = new web3.eth.Contract(OTC_ABI, CONFIG.OTC_CONTRACT);
+                cpcContract = new web3.eth.Contract(CPC_ABI, CONFIG.CPC_TOKEN);
+                
+                // Update UI
+                document.getElementById('connectWalletBtn').textContent = formatAddress(userAccount);
+                document.getElementById('connectWalletBtn').classList.add('connected');
+                
+                console.log('✅ Restored wallet connection:', userAccount);
+                
+                // Load data
+                loadOrders();
+                loadMyBalance();
+            } else {
+                // Clear stale data
+                localStorage.removeItem('connectedWallet');
+                localStorage.removeItem('walletProvider');
+            }
+        } catch (error) {
+            console.log('Could not restore wallet connection:', error);
+            localStorage.removeItem('connectedWallet');
+            localStorage.removeItem('walletProvider');
+        }
+    }
 }

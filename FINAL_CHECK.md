@@ -3,8 +3,7 @@
 ## ✅ Completed
 
 ### Contract Addresses Updated
-- ✅ Voting: `0x996586AC713b0206352c8073273407342D7080D5`
-- ✅ OTC: `0x309466E8c4d3aedC86cEAbA83652f19f6613737e`
+- ✅ OTC: `0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082`
 - ✅ All frontend files updated
 
 ### Language
@@ -35,7 +34,6 @@ CPC-OpenSource/
 │   └── README.md
 ├── dapp/              # Main DApp
 ├── otc/               # OTC Platform
-├── voting/            # Voting System
 ├── docs/              # Documentation
 ├── README.md
 ├── LICENSE
@@ -55,7 +53,7 @@ git init
 git add .
 git commit -m "Initial commit: CPC DeFi Ecosystem
 
-- Smart contracts for token, airdrop, presale, mining, NFT, OTC, voting
+- Smart contracts for token, airdrop, presale, mining, NFT, OTC
 - Frontend DApps with wallet integration
 - Comprehensive documentation
 - MIT License"
@@ -73,8 +71,7 @@ git push -u origin main
 | Presale | `0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d` |
 | Mining | `0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743` |
 | RewardNFT | `0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359` |
-| **OTC** | `0x309466E8c4d3aedC86cEAbA83652f19f6613737e` |
-| **Voting** | `0x996586AC713b0206352c8073273407342D7080D5` |
+| **OTC** | `0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082` |
 
 All contracts verified on BSCScan ✅
 

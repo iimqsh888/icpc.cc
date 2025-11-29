@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Fee Optimization Tips - CPC</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f3460;
+            color: #ecf0f1;
+        }
+        h1 { color: #2ecc71; }
+        h2 { color: #3498db; margin-top: 30px; }
+        .tip {
+            background: #16213e;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #2ecc71;
+            border-radius: 5px;
+        }
+        .warning {
+            background: #2c1810;
+            border-left-color: #e67e22;
+        }
+        .info {
+            background: #0a2540;
+            border-left-color: #3498db;
+        }
+        code {
+            background: #1a1a2e;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #2ecc71;
+        }
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .cost-table th, .cost-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #34495e;
+        }
+        .cost-table th {
+            background: #16213e;
+            color: #2ecc71;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>⛽ Gas Fee Optimization Tips</h1>
+    
+    <div class="tip info">
+        <strong>💡 好消息！</strong> BSC的gas费用已经比以太坊低100-1000倍了。但我们仍然可以进一步优化。
+    </div>
+
+    <h2>📊 预估Gas费用</h2>
+    <table class="cost-table">
+        <thead>
+            <tr>
+                <th>操作</th>
+                <th>Gas消耗</th>
+                <th>预估费用 (5 Gwei)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Airdrop Claim</td>
+                <td>~50,000 - 80,000</td>
+                <td>~$0.15 - $0.25</td>
+            </tr>
+            <tr>
+                <td>Presale Buy (无NFT)</td>
+                <td>~100,000 - 150,000</td>
+                <td>~$0.30 - $0.45</td>
+            </tr>
+            <tr>
+                <td>Presale Buy (铸造NFT)</td>
+                <td>~200,000 - 300,000</td>
+                <td>~$0.60 - $0.90</td>
+            </tr>
+            <tr>
+                <td>Mining Stake</td>
+                <td>~150,000 - 250,000</td>
+                <td>~$0.45 - $0.75</td>
+            </tr>
+            <tr>
+                <td>Mining Claim</td>
+                <td>~100,000 - 200,000</td>
+                <td>~$0.30 - $0.60</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>💰 如何降低Gas费用</h2>
+
+    <div class="tip">
+        <h3>1. 选择合适的交易时间</h3>
+        <p><strong>最佳时间：</strong> UTC 2-6点（北京时间10-14点）</p>
+        <p><strong>避开：</strong> UTC 14-18点（北京时间22-02点）- 欧美用户活跃时段</p>
+        <p><strong>周末优势：</strong> 周末gas价格通常比工作日低20-30%</p>
+    </div>
+
+    <div class="tip">
+        <h3>2. 批量操作</h3>
+        <p>✅ <strong>推荐：</strong> 一次性购买10 BNB的CPC</p>
+        <p>❌ <strong>不推荐：</strong> 分10次购买，每次1 BNB</p>
+        <p><strong>原因：</strong> 每次交易都有固定的基础gas成本（~21,000 gas），批量操作可以分摊这个成本。</p>
+    </div>
+
+    <div class="tip">
+        <h3>3. 手动设置Gas Price</h3>
+        <p>在MetaMask中：</p>
+        <ol>
+            <li>点击交易确认页面的"编辑"</li>
+            <li>选择"高级"</li>
+            <li>手动设置Gas Price：
+                <ul>
+                    <li><strong>急：</strong> 5-10 Gwei</li>
+                    <li><strong>正常：</strong> 3-5 Gwei</li>
+                    <li><strong>不急：</strong> 1-3 Gwei</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="tip">
+        <h3>4. 累积奖励后再Claim</h3>
+        <p>❌ <strong>不推荐：</strong> 每天claim一次mining奖励</p>
+        <p>✅ <strong>推荐：</strong> 等奖励累积到100+ CPC再claim</p>
+        <p><strong>节省：</strong> 可以节省90%以上的gas费用</p>
+    </div>
+
+    <div class="tip warning">
+        <h3>⚠️ 注意事项</h3>
+        <ul>
+            <li>设置过低的Gas Price可能导致交易长时间pending</li>
+            <li>如果交易pending超过30分钟，可以尝试加速或取消</li>
+            <li>BSC正常情况下3 Gwei就足够了</li>
+        </ul>
+    </div>
+
+    <h2>🔍 实时监控Gas价格</h2>
+    <div class="tip info">
+        <p>打开浏览器控制台（F12），连接钱包后会自动显示当前gas价格：</p>
+        <code>Current BSC Gas Price: X.XX Gwei</code>
+        <p>如果看到警告信息，建议等待gas价格降低后再进行交易。</p>
+    </div>
+
+    <h2>📈 Gas费用趋势</h2>
+    <div class="tip">
+        <p><strong>BSC历史数据：</strong></p>
+        <ul>
+            <li>平均gas价格：3-5 Gwei</li>
+            <li>高峰期：10-20 Gwei</li>
+            <li>低谷期：1-3 Gwei</li>
+        </ul>
+        <p>可以在 <a href="https://bscscan.com/gastracker" target="_blank" style="color: #3498db;">BscScan Gas Tracker</a> 查看实时数据。</p>
+    </div>
+
+    <h2>💡 最佳实践总结</h2>
+    <div class="tip">
+        <ol>
+            <li>✅ 在低峰期（北京时间10-14点）进行交易</li>
+            <li>✅ 批量操作，减少交易次数</li>
+            <li>✅ 手动设置合理的Gas Price（3-5 Gwei）</li>
+            <li>✅ 累积奖励后再claim</li>
+            <li>✅ 周末交易可以节省20-30%</li>
+            <li>❌ 避免在高峰期（北京时间22-02点）交易</li>
+            <li>❌ 避免频繁的小额交易</li>
+        </ol>
+    </div>
+
+    <a href="../index.html" class="back-link">← 返回主页</a>
+</body>
+</html>

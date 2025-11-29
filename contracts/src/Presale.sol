@@ -14,7 +14,7 @@ contract Presale is Ownable, ReentrancyGuard {
     uint256 public constant TOTAL_SALE = 1_337_000 * 1e18; // 10%
     uint256 public constant RATE = 1337 * 1e17; // 133.7 CPC per BNB
     uint256 public constant DURATION = 365 days;
-    uint256 public constant MIN_BNB = 1 ether; // 最低1 BNB
+    uint256 public constant MIN_BNB = 1 ether; // Minimum 1 BNB
 
     uint256 public immutable startTime;
     uint256 public tokensSold;

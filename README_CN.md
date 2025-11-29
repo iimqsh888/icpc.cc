@@ -3,8 +3,7 @@
 ## 📊 已完成的工作
 
 ### 1. 合约地址更新
-- ✅ Voting: `0x996586AC713b0206352c8073273407342D7080D5`
-- ✅ OTC: `0x309466E8c4d3aedC86cEAbA83652f19f6613737e`
+- ✅ OTC: `0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082`
 - ✅ 所有前端文件已更新
 
 ### 2. 语言清理
@@ -54,13 +53,7 @@ CPC-OpenSource/ (36个文件)
 │   ├── wallet-connector.js
 │   └── README.md
 │
-├── voting/                # 投票系统 (5个文件)
-│   ├── voting.html
-│   ├── voting.js
-│   ├── voting.css
-│   ├── wallet-connector.js
-│   └── README.md
-│
+
 ├── docs/                  # 文档 (2个文件)
 │   ├── DEPLOYMENT.md
 │   └── USER_GUIDE.md
@@ -109,8 +102,7 @@ git push -u origin main
 | Presale | `0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d` | ✅ 已验证 |
 | Mining | `0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743` | ✅ 已验证 |
 | RewardNFT | `0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359` | ✅ 已验证 |
-| **OTC** | `0x309466E8c4d3aedC86cEAbA83652f19f6613737e` | ✅ 已验证 |
-| **Voting** | `0x996586AC713b0206352c8073273407342D7080D5` | ✅ 已验证 |
+| **OTC** | `0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082` | ✅ 已验证 |
 
 所有合约都在BSCScan上验证通过！
 

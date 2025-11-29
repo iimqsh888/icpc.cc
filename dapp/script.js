@@ -561,7 +561,7 @@ async function loadTokenInfo() {
     }
 }
 
-// Load Airdrop Data - 直接从区块链读取，不依赖后端
+// Load Airdrop Data - Read directly from blockchain, no backend dependency
 async function loadAirdropData() {
     if (!userAccount || !web3) {
         console.log('Wallet not connected, skipping airdrop data load');
@@ -576,7 +576,7 @@ async function loadAirdropData() {
         
         const airdropContract = new web3.eth.Contract(airdropABI, CONTRACTS.AIRDROP);
         
-        // 直接从区块链读取数据
+        // Read data directly from blockchain
         const [hasBABT, hasClaimed, totalClaimed, claimAmount] = await Promise.all([
             checkBABTStatus(userAccount),
             airdropContract.methods.hasClaimed(userAccount).call(),
@@ -610,7 +610,7 @@ async function loadAirdropData() {
         }
         
         // Update airdrop progress
-        const airdropPool = 1337000; // 固定的空投池大小
+        const airdropPool = 1337000; // Fixed airdrop pool size
         const totalClaimedCPC = parseFloat(totalClaimed) / Math.pow(10, 18);
         const percentage = (totalClaimedCPC / airdropPool) * 100;
         
@@ -956,7 +956,7 @@ function clearContractData() {
         babtStatusElement.style.color = '#95a5a6';
     }
     
-    // 重置进度条
+    // Reset progress bars
     const progressBars = ['airdropProgress', 'presaleProgressBar', 'halvingProgress'];
     progressBars.forEach(id => {
         const element = document.getElementById(id);
@@ -976,7 +976,7 @@ async function claimAirdrop() {
         return;
     }
     
-    // 确保在 BSC 网络
+    // Ensure on BSC network
     try {
         const chainId = await web3.eth.getChainId();
         if (chainId !== 56) {

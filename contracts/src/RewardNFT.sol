@@ -12,7 +12,7 @@ contract RewardNFT is ERC721, Ownable {
     uint256 private _tokenIdCounter;
     address public minter;
     
-    // IPFS 动图链接
+    // IPFS animated image link
     string public constant BASE_IMAGE_URI = "ipfs://bafybeibaw5ich25wqbpu6vjmzmlfjfl6egbnfbdnf52zevsx44kxnvtwzq";
 
     event MinterSet(address indexed minter);
@@ -43,7 +43,7 @@ contract RewardNFT is ERC721, Ownable {
         return super._update(to, tokenId, auth);
     }
 
-    // 链上生成 Metadata，每个 NFT 有唯一编号
+    // Generate on-chain metadata, each NFT has unique number
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
 

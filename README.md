@@ -13,8 +13,7 @@ CPC is a comprehensive DeFi ecosystem that includes:
 - **Token Distribution**: Airdrop system with BABT NFT verification
 - **NFT Presale**: Purchase NFTs with BNB and earn CPC rewards
 - **Mining System**: Stake CPC tokens to earn rewards
-- **OTC Trading**: Peer-to-peer CPC trading platform with 0.2% fees
-- **Community Voting**: 30-day voting rounds to distribute OTC revenue
+- **OTC Trading**: Peer-to-peer CPC trading platform with monthly X (Twitter) giveaways
 
 ## 🚀 Features
 
@@ -24,13 +23,11 @@ CPC is a comprehensive DeFi ecosystem that includes:
 - ✅ **Presale**: NFT presale with CPC rewards
 - ✅ **Mining**: Stake CPC to earn rewards
 - ✅ **RewardNFT**: ERC721 NFT with daily rewards
-- ✅ **CPCOTC**: P2P trading with 0.2% fees
-- ✅ **CPCVoting**: Community governance for revenue distribution
+- ✅ **CPCOTC**: P2P trading with 0.2% fees and monthly giveaways
 
 ### Frontend DApps
 - 🌐 Main DApp with wallet integration
 - 💱 OTC Trading Interface
-- 🗳️ Voting System Interface
 
 ## 📦 Project Structure
 
@@ -42,7 +39,6 @@ CPC-OpenSource/
 │   └── scripts/       # Deployment scripts
 ├── dapp/              # Main DApp frontend
 ├── otc/               # OTC trading UI
-├── voting/            # Voting system UI
 ├── docs/              # Documentation
 └── README.md
 ```
@@ -56,8 +52,7 @@ CPC-OpenSource/
 | Presale | `0xd6906C076e902E44C7adc8FcC190d4b1f687Ac1d` | ✅ |
 | Mining | `0x0fd5dFf70E3c8a672FDF6b2126114389B4Ea7743` | ✅ |
 | RewardNFT | `0x4313EfBcc53Fe8DEAe8e55Af55AA9c6cBC57f359` | ✅ |
-| OTC | `0x309466E8c4d3aedC86cEAbA83652f19f6613737e` | ✅ |
-| Voting | `0x996586AC713b0206352c8073273407342D7080D5` | ✅ |
+| OTC | `0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082` | ✅ |
 
 ## 🛠️ Technology Stack
 
@@ -72,10 +67,8 @@ CPC-OpenSource/
 - [Smart Contracts](./contracts/README.md) - Contract documentation
 - [DApp Guide](./dapp/README.md) - Frontend setup and usage
 - [OTC Trading](./otc/README.md) - OTC platform guide
-- [Voting System](./voting/README.md) - Governance documentation
 - [Deployment Guide](./docs/DEPLOYMENT.md) - How to deploy
 - [User Guide](./docs/USER_GUIDE.md) - How to use the platform
-- [Security Audit](./docs/SECURITY_AUDIT.md) - Security analysis
 
 ## 🚀 Quick Start
 
@@ -142,15 +135,10 @@ npx hardhat coverage
 
 ### 2. OTC Trading
 - Create buy/sell orders for CPC tokens
-- 0.001 BNB order creation fee
-- 0.2% trading fee on filled orders
-- All fees go to voting contract
-
-### 3. Community Governance
-- Stake 1 CPC to become a candidate
-- Vote for candidates (requires 1 CPC balance)
-- Winner receives OTC fees for next 30 days
-- New voting round every 30 days
+- 0.001 BNB order creation fee (paid by buyer)
+- 0.2% trading fee on filled orders (deducted from seller)
+- All fees go to monthly X (Twitter) giveaway winners
+- Follow @icpc_cc on X to participate in monthly giveaways
 
 ## 🔒 Security
 

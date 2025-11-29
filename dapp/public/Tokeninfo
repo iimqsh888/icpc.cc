@@ -1,0 +1,124 @@
+1. Project Overview
+Project Name: Common Prosperity (CPC)
+Token Name: CPC
+Token Symbol: CPC
+Standard: ERC20, decimals 18
+Total Supply: 13,370,000 CPC
+Core Vision:
+•  Communist Attributes:
+	•  Equitable Distribution: CPC ensures broad access through a BABT NFT-based airdrop, rewarding verified users without favoring whales. The mining contract’s initial fixed-weight phase (1 CPC = 1 share up to 10,000 CPC staked) prevents early domination by large holders, promoting fairness.
+	•  Decentralized Governance: All contracts (airdrop, presale, mining, NFT) renounce ownership post-deployment, ensuring no central authority can alter rules, aligning with a community-driven ethos.
+	•  Universal Participation: The 10-year lockup in mining encourages long-term commitment from all users, not just elites, while the Soulbound NFT rewards broader presale participation (≥ 1 BNB).
+•  On-Chain Gold Attributes:
+	•  Scarcity: Fixed supply of 13,370,000 CPC, with no further minting possible (minter role revoked), mirroring gold’s limited supply.
+	•  Value Stability: Gradual mining output (1 CPC/hour initially) with halving every 10% of the pool (1,069,600 CPC) ensures predictable, diminishing issuance, akin to Bitcoin’s deflationary model.
+	•  Long-Term Store of Value: 10-year staking lockup and Soulbound NFT’s daily rewards (1 CPC/day, halved with pool) incentivize holding, positioning CPC as a stable, appreciating asset.
+Contracts:
+•  Token: Already deployed at EXISTING_TOKEN_ADDRESS, permissions renounced.
+•  Airdrop: Distributes 1,337,000 CPC (10%) to BABT NFT holders.
+•  Presale: Sells 1,337,000 CPC (10%) for 10,000 BNB, with BNB sent to a hard-coded deployer address.
+•  Mining: Distributes 10,696,000 CPC (80%) via staking, with rewards halved periodically.
+•  NFT: Soulbound, minted for presale contributors (≥ 1 BNB), grants daily mining rewards.
+
+2. Airdrop Logic
+•  Purpose: Distribute CPC to verified Binance users (via BABT NFT), ensuring fair access.
+•  Mechanics:
+	•  Users with BABT NFT (0x2B09d47D550061f995a3b5C6f0Fd58005215d7c8) can call claim() every 8 hours to receive 1 CPC.
+	•  Total cap: 1,337,000 CPC. Once reached, claims stop.
+	•  Ownership renounced post-deployment, ensuring no central control.
+•  Communist Attribute: Rewards only verified users (BABT), preventing bot abuse and ensuring equitable access across the community.
+•  On-Chain Gold Attribute: Controlled distribution preserves CPC’s scarcity, as only a small, fixed portion (10%) is airdropped.
+•  Frontend Needs:
+	•  Display: BABT ownership, claimable status (time since last claim), remaining airdrop pool.
+	•  Action: “Claim Airdrop” button, triggers claim() via MetaMask.
+	•  Errors: No BABT, <8-hour interval, pool exhausted.
+
+3. Presale Logic
+•  Purpose: Raise 10,000 BNB to fund development, rewarding contributors with CPC and NFTs.
+•  Mechanics:
+	•  Users send 0.01–100 BNB via buy(), receiving ~133.7 CPC/BNB.
+	•  BNB instantly transfers to DEPLOYER_ADDRESS (hard-coded).
+	•  Users contributing ≥ 1 BNB (cumulative) receive a Soulbound NFT.
+	•  Duration: 1 year, after which remaining CPC stays in contract (ownership renounced).
+•  Communist Attribute: Low entry barrier (0.01 BNB min) encourages broad participation; NFT reward caps at 1 per address, preventing whale dominance.
+•  On-Chain Gold Attribute: Fixed sale (1,337,000 CPC) and instant BNB transfer ensure transparency and preserve token rarity.
+•  Frontend Needs:
+	•  Display: BNB raised, CPC sold, user’s BNB contribution, NFT status, time remaining.
+	•  Action: Input field for BNB amount, “Buy” button to call buy().
+	•  Errors: Invalid BNB amount, presale ended, insufficient tokens.
+
+4. NFT Logic
+•  Purpose: Reward presale contributors with a permanent benefit tied to mining rewards.
+•  Mechanics:
+	•  Soulbound (non-transferable) NFT, minted by presale contract for users with ≥ 1 BNB.
+	•  Limited to 1 NFT per address.
+	•  Minter role and ownership renounced post-deployment.
+•  Communist Attribute: Equal NFT distribution (1 per address) ensures fairness, preventing wealth concentration.
+•  On-Chain Gold Attribute: Permanent, non-transferable rewards mimic gold’s enduring value, tying users to long-term ecosystem growth.
+•  Frontend Needs:
+	•  Display: User’s NFT ownership status.
+	•  Action: None (minted automatically via presale).
+	•  Note: Highlight NFT’s role in daily mining rewards.
+
+5. Mining Logic
+•  Purpose: Distribute 80% of CPC via staking, rewarding long-term commitment.
+•  Mechanics:
+	•  Staking:
+		•  Users call stake(amount) to lock CPC for 10 years.
+		•  Weighting:
+			•  Fixed Phase (total staked ≤ 10,000 CPC): 1 CPC = 1 weight share, capped at 10,000 total, 1,000 per user.
+			•  Proportional Phase (total staked > 10,000 CPC): Weight = staked amount.
+		•  Lockup: 10 years, updated to latest stake time.
+	•  Rewards:
+		•  Initial rate: 1 CPC/hour, distributed by weight.
+		•  NFT holders call claimNftReward() for 1 CPC/day (24-hour cooldown), reduced by halving.
+		•  Halving: Every 10% of pool (1,069,600 CPC) mined, rate and NFT reward halve.
+	•  Pool: 10,696,000 CPC, stops when exhausted.
+	•  Ownership renounced post-deployment.
+•  Communist Attribute: Fixed phase caps weight to prevent early whale control; 10-year lockup equalizes long-term commitment.
+•  On-Chain Gold Attribute: Halving mimics Bitcoin’s scarcity model; long lockup and NFT rewards ensure CPC’s value as a stable, appreciating asset.
+•  Frontend Needs:
+	•  Display: Total staked, user’s stake, weight, earned rewards, NFT reward status, lockup time, halving progress.
+	•  Actions: “Stake” (with approve()), “Unstake” (post-lockup), “Claim Reward”, “Claim NFT Reward”.
+	•  Errors: Insufficient balance, weight caps, lockup active, no rewards, pool exhausted.
+
+Frontend Development Guidelines
+•  Framework: React or Vue.js with Web3.js/Ethers.js for BSC interaction.
+•  Wallet: MetaMask, targeting BSC mainnet (chainId: 56).
+•  Contracts:
+	•  Addresses: EXISTING_TOKEN_ADDRESS, NFT_ADDRESS, AIRDROP_ADDRESS, PRESALE_ADDRESS, MINING_ADDRESS.
+	•  External: BABT NFT (0x2B09d47D550061f995a3b5C6f0Fd58005215d7c8).
+	•  ABI: Generate from contracts or fetch from BscScan post-verification.
+•  UI Structure:
+	•  Home: Introduce CPC as a fair, scarce digital asset (“Common Properity: The People’s Gold on Chain”). Show total supply, allocation, contract addresses.
+	•  Airdrop Page: BABT status, claim timer, pool status, “Claim” button.
+	•  Presale Page: BNB raised, tokens sold, user contribution, NFT status, BNB input, “Buy” button.
+	•  Mining Page: Stake details, rewards, NFT reward timer, halving progress, action buttons.
+	•  Wallet Status: Connect button, display address, CPC balance.
+•  Messaging:
+	•  Communist: “Join the revolution: CPC empowers everyone with fair rewards and no central control.”
+	•  On-Chain Gold: “Hold CPC like digital gold—scarce, stable, and built for the long term.”
+•  Features:
+	•  Real-time data: Poll contract states (e.g., totalStaked, bnbRaised).
+	•  Event listeners: Track Staked, Unstaked, RewardClaimed, NftRewardClaimed.
+	•  Error handling: Wallet issues, chain mismatch, contract errors.
+	•  Multilingual: Chinese and English support.
+•  Security: Validate inputs, show gas estimates, use HTTPS for DApp.
+
+Marketing Narrative
+•  Tagline: “CPC: The People’s Gold—Fair, Scarce, Forever.”
+•  Communist Appeal:
+	•  “No elites, no bosses: CPC’s airdrop and capped mining ensure everyone gets a share.”
+	•  “Renounced contracts mean the community owns the future.”
+•  On-Chain Gold Appeal:
+	•  “Fixed 13.37M supply, halving rewards, and 10-year lockup make CPC a digital store of value.”
+	•  “Soulbound NFTs reward loyalty with daily dividends, like gold dividends.”
+•  Call to Action: “Claim your CPC airdrop, buy in the presale, stake for rewards, and hold the future of value.”
+
+Logic Vulnerabilities (Recap)
+•  Balance Risk: Manual token transfers must be verified (BscScan check).
+•  BABT Dependency: Ensure BABT contract is trusted.
+•  NFT Fairness: 1/address limit and Soulbound nature prevent abuse.
+•  Mining Balance: 10,696,000 CPC must be pre-transferred.
+•  Pool Exhaustion: NFT rewards (est. 36% pool over 10 years with 1000 NFTs) are sustainable.
+•  Permissions: Renounce immediately post-deployment to lock contracts.

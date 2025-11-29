@@ -16,11 +16,11 @@ contract Mining is Ownable, ReentrancyGuard {
     address public constant teamAddress = 0x28D176D6876DcdD906e70932B5c01Fe91A5Bf4d5;
 
     uint256 public constant POOL = 10_696_000 * 1e18; // 80%
-    uint256 public constant LOCK_PERIOD = 3650 days; // 10年
+    uint256 public constant LOCK_PERIOD = 3650 days; // 10 years
     uint256 public constant INIT_RATE = 1e18; // 1 CPC per hour
-    uint256 public constant HALVE_THRESHOLD = 133_700 * 1e18; // 每减少133,700 CPC减半
-    uint256 public constant INIT_WEIGHT = 5_000 * 1e18; // 初始权重5,000 CPC
-    uint256 public constant MIN_STAKE = 10 * 1e18; // 最低质押10 CPC
+    uint256 public constant HALVE_THRESHOLD = 133_700 * 1e18; // Halve every 133,700 CPC distributed
+    uint256 public constant INIT_WEIGHT = 5_000 * 1e18; // Initial weight 5,000 CPC
+    uint256 public constant MIN_STAKE = 10 * 1e18; // Minimum stake 10 CPC
     uint256 public constant TICKET_FEE = 2 * 1e18; // 2 USDT
     uint256 public constant NFT_DAILY = 1e18; // 1 CPC per day
     uint256 public constant NFT_INTERVAL = 24 hours;
@@ -131,7 +131,7 @@ contract Mining is Ownable, ReentrancyGuard {
         require(rewardNFT.balanceOf(msg.sender) > 0, "No NFT");
         require(block.timestamp >= lastNftClaim[msg.sender] + NFT_INTERVAL, "Wait 24h");
 
-        uint256 reward = NFT_DAILY >> halveCount; // 减半
+        uint256 reward = NFT_DAILY >> halveCount; // Halved reward
         require(totalDistributed + reward <= POOL, "Pool exhausted");
 
         lastNftClaim[msg.sender] = block.timestamp;
@@ -152,7 +152,7 @@ contract Mining is Ownable, ReentrancyGuard {
         }
     }
 
-    // 获取减半进度信息
+    // Get halving progress information
     function getHalvingInfo() external view returns (
         uint256 currentHalveCount,
         uint256 currentMiningRate,
@@ -166,12 +166,12 @@ contract Mining is Ownable, ReentrancyGuard {
         totalDistributedAmount = totalDistributed;
         nextHalveThreshold = HALVE_THRESHOLD * (halveCount + 1);
         
-        // 计算当前减半周期内的进度
+        // Calculate progress within current halving cycle
         uint256 currentHalveStart = HALVE_THRESHOLD * halveCount;
         progressToNextHalve = totalDistributed > currentHalveStart ? 
             totalDistributed - currentHalveStart : 0;
         
-        // 计算百分比 (0-100)
+        // Calculate percentage (0-100)
         if (progressToNextHalve > 0) {
             percentageToNextHalve = (progressToNextHalve * 100) / HALVE_THRESHOLD;
         } else {
