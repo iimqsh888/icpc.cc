@@ -144,7 +144,7 @@ body::after {
     position: relative;
 }
 
-/* Logo扫光时的光晕效果 */
+/* Logo glow effect */
 .nav-logo::after {
     content: '';
     position: absolute;
@@ -199,7 +199,7 @@ body::after {
     overflow: hidden;
 }
 
-/* 扫光效果 - 在文字上方 */
+/* Sweep effect on text */
 .logo-text::before {
     content: '';
     position: absolute;
@@ -215,7 +215,7 @@ body::after {
     transform: skewX(-20deg);
 }
 
-/* 从左到右扫过的动画 */
+/* Left to right sweep animation */
 @keyframes textSweep {
     0% {
         left: -100%;
@@ -1311,7 +1311,7 @@ body::after {
         font-size: 1rem;
     }
 
-    /* 手机端：隐藏汉堡菜单和导航菜单 */
+    /* Mobile: hide hamburger menu and navigation */
     .mobile-menu-toggle {
         display: none !important;
     }
@@ -1320,7 +1320,7 @@ body::after {
         display: none !important;
     }
 
-    /* 手机端：显示钱包按钮在右上角 */
+    /* Mobile: show wallet button in top right */
     .nav-actions {
         display: flex !important;
     }

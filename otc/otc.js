@@ -425,7 +425,7 @@ async function loadOrders() {
                 <td>
                     ${order.creator.toLowerCase() === userAccount.toLowerCase() 
                         ? `<button class="btn-cancel" onclick="cancelOrder(${orderId})">Cancel</button>`
-                        : `<button class="btn-fill" onclick="fillOrder(${orderId}, ${isBuy})">Fill</button>`
+                        : `<button class="btn-fill" onclick="fillOrder(${orderId}, ${isBuy ? 'true' : 'false'})">Fill</button>`
                     }
                 </td>
             `;
@@ -663,10 +663,47 @@ async function fillOrder(orderId, isBuyOrder) {
         return;
     }
     
-    showLoading('Filling order...');
+    // Convert string to boolean if needed
+    if (typeof isBuyOrder === 'string') {
+        isBuyOrder = isBuyOrder === 'true';
+    }
     
     try {
         const order = await otcContract.methods.orders(orderId).call();
+        const remainingAmount = web3.utils.fromWei(order.remainingAmount, 'ether');
+        const pricePerToken = web3.utils.fromWei(order.pricePerToken, 'ether');
+        
+        // Ask user for fill amount
+        const fillAmountInput = prompt(
+            `Order has ${remainingAmount} CPC remaining at ${pricePerToken} BNB each.\n\n` +
+            `Enter amount to fill (leave empty for full amount):`
+        );
+        
+        // User cancelled
+        if (fillAmountInput === null) {
+            return;
+        }
+        
+        // Validate input
+        let fillAmount = 0; // 0 means fill all
+        if (fillAmountInput && fillAmountInput.trim() !== '') {
+            const inputAmount = parseFloat(fillAmountInput);
+            if (isNaN(inputAmount) || inputAmount <= 0) {
+                showToast('Invalid amount', 'error');
+                return;
+            }
+            if (!Number.isInteger(inputAmount)) {
+                showToast('Amount must be a whole number', 'error');
+                return;
+            }
+            if (inputAmount > parseFloat(remainingAmount)) {
+                showToast(`Amount exceeds remaining ${remainingAmount} CPC`, 'error');
+                return;
+            }
+            fillAmount = web3.utils.toWei(inputAmount.toString(), 'ether');
+        }
+        
+        showLoading('Filling order...');
         
         if (isBuyOrder) {
             // Filling a buy order (seller provides CPC)
@@ -701,7 +738,7 @@ async function fillOrder(orderId, isBuyOrder) {
             // Estimate gas first
             let gasEstimate;
             try {
-                gasEstimate = await otcContract.methods.fillBuyOrder(orderId, 0).estimateGas({
+                gasEstimate = await otcContract.methods.fillBuyOrder(orderId, fillAmount).estimateGas({
                     from: userAccount
                 });
                 console.log('Gas estimate:', gasEstimate);
@@ -714,7 +751,7 @@ async function fillOrder(orderId, isBuyOrder) {
             const currentGasPrice = await web3.eth.getGasPrice();
             const gasPrice = Math.floor(currentGasPrice * 1.2);
             
-            const tx = await otcContract.methods.fillBuyOrder(orderId, 0).send({ 
+            const tx = await otcContract.methods.fillBuyOrder(orderId, fillAmount).send({ 
                 from: userAccount,
                 gas: Math.floor(gasEstimate * 1.2),
                 gasPrice: gasPrice
@@ -722,14 +759,15 @@ async function fillOrder(orderId, isBuyOrder) {
             console.log('Buy order filled:', tx);
         } else {
             // Filling a sell order (buyer provides BNB)
-            const totalValue = (order.totalValue * order.remainingAmount) / order.tokenAmount;
+            const amountToFill = fillAmount === 0 ? order.remainingAmount : fillAmount;
+            const totalValue = (order.totalValue * amountToFill) / order.tokenAmount;
             
             showLoading('Filling sell order...');
             
             // Estimate gas first
             let gasEstimate;
             try {
-                gasEstimate = await otcContract.methods.fillSellOrder(orderId, 0).estimateGas({
+                gasEstimate = await otcContract.methods.fillSellOrder(orderId, fillAmount).estimateGas({
                     from: userAccount,
                     value: totalValue
                 });
@@ -743,7 +781,7 @@ async function fillOrder(orderId, isBuyOrder) {
             const currentGasPrice = await web3.eth.getGasPrice();
             const gasPrice = Math.floor(currentGasPrice * 1.2);
             
-            const tx = await otcContract.methods.fillSellOrder(orderId, 0).send({
+            const tx = await otcContract.methods.fillSellOrder(orderId, fillAmount).send({
                 from: userAccount,
                 value: totalValue,
                 gas: Math.floor(gasEstimate * 1.2),
@@ -1017,3 +1055,10 @@ async function checkPreviousConnection() {
         }
     }
 }
+
+
+// Expose functions to global scope for onclick handlers
+window.fillOrder = fillOrder;
+window.cancelOrder = cancelOrder;
+window.copyAddress = copyAddress;
+window.toggleRules = toggleRules;
