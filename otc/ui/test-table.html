@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Order Table</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #2a2a2a; }
+        button { padding: 8px 16px; cursor: pointer; border: none; border-radius: 5px; color: white; }
+        .btn-fill { background: #0099ff; }
+        .btn-cancel { background: #ff4757; }
+    </style>
+</head>
+<body>
+    <h1>Test Order Table with Fill Buttons</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="orderTable">
+            <!-- Orders will be inserted here -->
+        </tbody>
+    </table>
+    
+    <div id="log" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 5px;"></div>
+
+    <script>
+        function log(msg) {
+            document.getElementById('log').innerHTML += msg + '<br>';
+        }
+
+        // Mock fillOrder function
+        function fillOrder(orderId, isBuyOrder) {
+            log(`fillOrder called: orderId=${orderId}, isBuyOrder=${isBuyOrder} (type: ${typeof isBuyOrder})`);
+            
+            // Convert string to boolean
+            if (typeof isBuyOrder === 'string') {
+                isBuyOrder = isBuyOrder === 'true';
+                log(`Converted to boolean: ${isBuyOrder}`);
+            }
+            
+            const amount = prompt(`Fill order ${orderId} (${isBuyOrder ? 'BUY' : 'SELL'})\nEnter amount:`);
+            if (amount) {
+                log(`✅ Would fill ${amount} CPC for order ${orderId}`);
+            } else {
+                log(`❌ Cancelled`);
+            }
+        }
+
+        // Expose to global
+        window.fillOrder = fillOrder;
+
+        // Create test orders
+        const orders = [
+            { id: 1, type: 'BUY', amount: '100 CPC', isBuy: true },
+            { id: 2, type: 'SELL', amount: '200 CPC', isBuy: false },
+            { id: 3, type: 'BUY', amount: '50 CPC', isBuy: true }
+        ];
+
+        const tbody = document.getElementById('orderTable');
+        orders.forEach(order => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${order.id}</td>
+                <td>${order.type}</td>
+                <td>${order.amount}</td>
+                <td>
+                    <button class="btn-fill" onclick="fillOrder(${order.id}, ${order.isBuy ? 'true' : 'false'})">Fill</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        log('Test table loaded. Click Fill buttons to test.');
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Fill Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #0099ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #00aaff;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Fill Order Function</h1>
+    
+    <div>
+        <h3>Test Scenarios:</h3>
+        <button onclick="testFillOrder(1, true)">Test Fill Buy Order (ID: 1)</button>
+        <button onclick="testFillOrder(2, false)">Test Fill Sell Order (ID: 2)</button>
+        <button onclick="testFillOrder(3, 'true')">Test with String 'true'</button>
+        <button onclick="testFillOrder(4, 'false')">Test with String 'false'</button>
+    </div>
+    
+    <div id="output">
+        <strong>Output:</strong><br>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        // Mock functions
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += message + '<br>';
+        }
+
+        // Simulate the fillOrder function
+        function testFillOrder(orderId, isBuyOrder) {
+            log(`\n--- Testing fillOrder(${orderId}, ${isBuyOrder}) ---`);
+            log(`Type of isBuyOrder: ${typeof isBuyOrder}`);
+            log(`Value of isBuyOrder: ${isBuyOrder}`);
+            
+            // Convert string to boolean if needed
+            if (typeof isBuyOrder === 'string') {
+                log(`Converting string to boolean...`);
+                isBuyOrder = isBuyOrder === 'true';
+                log(`After conversion: ${isBuyOrder} (type: ${typeof isBuyOrder})`);
+            }
+            
+            // Simulate prompt
+            const fillAmountInput = prompt(
+                `Order ${orderId} - Type: ${isBuyOrder ? 'BUY' : 'SELL'}\n\n` +
+                `Enter amount to fill (leave empty for full amount):`
+            );
+            
+            if (fillAmountInput === null) {
+                log('User cancelled');
+                return;
+            }
+            
+            log(`User input: "${fillAmountInput}"`);
+            
+            // Validate input
+            let fillAmount = 0;
+            if (fillAmountInput && fillAmountInput.trim() !== '') {
+                const inputAmount = parseFloat(fillAmountInput);
+                log(`Parsed amount: ${inputAmount}`);
+                
+                if (isNaN(inputAmount) || inputAmount <= 0) {
+                    log('❌ Invalid amount');
+                    return;
+                }
+                if (!Number.isInteger(inputAmount)) {
+                    log('❌ Amount must be a whole number');
+                    return;
+                }
+                fillAmount = inputAmount;
+            }
+            
+            log(`✅ Fill amount: ${fillAmount} (0 = fill all)`);
+            log(`✅ Order type: ${isBuyOrder ? 'BUY' : 'SELL'}`);
+            log(`✅ Function would proceed with transaction`);
+        }
+
+        // Expose to window
+        window.testFillOrder = testFillOrder;
+        
+        log('Test page loaded. Click buttons to test fillOrder function.');
+    </script>
+</body>
+</html>

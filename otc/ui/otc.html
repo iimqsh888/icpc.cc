@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Decentralized OTC trading platform for CPC token on BSC">
+    <title>CPC OTC Trading</title>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
+    <link rel="stylesheet" href="./otc.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="/public/web3.min.js"></script>
+    <script src="./wallet-connector.js"></script>
+    <script src="./otc-abi.js"></script>
+    <script src="./cpc-token-abi.js"></script>
+</head>
+<body>
+    <!-- Wallet Selection Modal -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <div class="wallet-modal-header">
+                <h2><i class="fas fa-wallet"></i> Connect Wallet</h2>
+                <button class="wallet-modal-close" id="closeWalletModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="wallet-options">
+                <div class="wallet-option" data-wallet="metamask">
+                    <div class="wallet-icon">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjguNSAyLjVsLTkuNSA3IDEuNzUtNC4yNXoiIGZpbGw9IiNlMjc2MWIiLz48cGF0aCBkPSJNMy41IDIuNWw5LjQgNy4wNS0xLjctNC4zeiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0yNC4yNSAyMi41bC0yLjUgMy44NSA1LjM1IDEuNDcgMS41NC01LjI3eiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0zLjM2IDIyLjU1bDEuNTQgNS4yNyA1LjM1LTEuNDctMi41LTMuODV6IiBmaWxsPSIjZTI3NjFiIi8+PHBhdGggZD0iTTE0LjUgMTMuNWwtMS41IDIuMjUgNS4zNS4yNS0uMi01Ljc1eiIgZmlsbD0iI2UyNzYxYiIvPjxwYXRoIGQ9Ik0xNy41IDEzLjVsLTMuNjUtMy4yNS0uMiA1Ljc1IDUuMzUtLjI1eiIgZmlsbD0iI2UyNzYxYiIvPjwvc3ZnPg==" 
+                             alt="MetaMask">
+                    </div>
+                    <div class="wallet-info">
+                        <h3>MetaMask</h3>
+                        <p>Connect using MetaMask wallet</p>
+                    </div>
+                    <span class="wallet-badge">Popular</span>
+                </div>
+                
+                <div class="wallet-option" data-wallet="binance">
+                    <div class="wallet-icon">
+                        <svg width="40" height="40" viewBox="0 0 126.61 126.61" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="#f3ba2f">
+                                <path d="M38.73 53.2l24.59-24.58 24.6 24.6 14.3-14.31L63.32 0 24.43 38.9z"/>
+                                <path d="M0 63.31l14.3-14.3 14.31 14.3-14.31 14.3z"/>
+                                <path d="M38.73 73.41l24.59 24.59 24.6-24.6 14.31 14.29-38.9 38.91-38.91-38.88z"/>
+                                <path d="M98 63.31l14.3-14.3 14.31 14.3-14.31 14.3z"/>
+                                <path d="M77.83 63.3L63.32 48.78 52.59 59.51l-1.24 1.23-2.54 2.54 14.51 14.5 14.51-14.47z"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="wallet-info">
+                        <h3>Binance Wallet</h3>
+                        <p>Connect using Binance Chain Wallet</p>
+                    </div>
+                </div>
+                
+                <div class="wallet-option" data-wallet="walletconnect">
+                    <div class="wallet-icon">
+                        <img src="https://avatars.githubusercontent.com/u/37784886" alt="WalletConnect">
+                    </div>
+                    <div class="wallet-info">
+                        <h3>WalletConnect</h3>
+                        <p>Scan with mobile wallet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="otc-container">
+        <!-- Header -->
+        <header class="otc-header">
+            <div class="header-content">
+                <h1><a href="/" style="color: inherit; text-decoration: none; cursor: pointer;" title="Back to Main DApp"><i class="fas fa-arrow-left"></i></a> CPC OTC Trading (Alpha unstable version)</h1>
+                <p>Decentralized Over-The-Counter Trading Platform</p>
+            </div>
+            <button id="connectWallet" class="connect-btn">
+                <i class="fas fa-wallet"></i> Connect Wallet
+            </button>
+            <div id="walletInfo" class="wallet-info" style="display: none;">
+                <div class="wallet-address" id="walletAddress"></div>
+                <button id="disconnectBtn" class="btn-disconnect" onclick="disconnectWallet()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Contract Rules Section -->
+        <div class="contract-rules-section">
+            <div class="contract-rules-inline">
+                <div class="rules-header-inline" data-section="otc">
+                    <p class="rules-subtitle">
+                        <i class="fas fa-info-circle"></i> 
+                        View Contract Rules
+                    </p>
+                    <button class="toggle-btn-inline" id="otc-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <ul class="rules-content-inline collapsed" id="otc-rules">
+                    <li><i class="fas fa-gift"></i> <strong>Revenue Distribution:</strong> All OTC fees go to monthly X (Twitter) giveaway winners!</li>
+                    <li><i class="fas fa-trophy"></i> <strong>How to Win:</strong> Follow @icpc_cc on X, participate in monthly giveaways to win 30 days of OTC revenue</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Order Creation Fee:</strong> 0.001 BNB per order (prevents spam, goes to current winner)</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Trading Fee:</strong> 0.2% of trade value (deducted from BNB, goes to current winner)</li>
+                    <li><i class="fas fa-shield-alt"></i> <strong>Winner Protection:</strong> Each winner receives fees for 30 days (protected period, cannot be changed)</li>
+                    <li><i class="fas fa-coins"></i> <strong>Real-time Payment:</strong> All fees sent instantly to current winner's wallet</li>
+                    <li><i class="fas fa-info-circle"></i> <strong>Buy Orders:</strong> Lock BNB + 0.001 BNB creation fee, receive CPC when filled (seller pays 0.2% trading fee from their BNB)</li>
+                    <li><i class="fas fa-info-circle"></i> <strong>Sell Orders:</strong> Lock CPC + 0.001 BNB creation fee, receive BNB when filled (0.2% trading fee deducted from your BNB)</li>
+                    <li><i class="fas fa-undo"></i> <strong>Cancellation:</strong> Cancel anytime, locked assets returned (creation fee non-refundable)</li>
+                    <li><i class="fas fa-gift"></i> <strong>Join Giveaway:</strong> <a href="https://x.com/icpc_cc/status/1994815987963560018?s=46" target="_blank" style="color: #1DA1F2;">Follow us on X</a> for monthly revenue giveaways!</li>
+                    <li style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(52, 152, 219, 0.2);">
+                        <i class="fas fa-file-contract"></i> <strong>OTC Contract:</strong> 
+                        <a href="https://bscscan.com/address/0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082" target="_blank" style="color: #3498db; font-family: monospace; word-break: break-all;">
+                            0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082
+                        </a>
+                        <button class="copy-btn-inline" onclick="copyAddress('0x9886e955DaD9ABcCC86980E1aC55cA2Ae57D5082')" title="Copy address">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-list"></i>
+                <div>
+                    <span class="stat-label">Active Orders</span>
+                    <span class="stat-value" id="activeOrders">0</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                    <span class="stat-label">24h Volume</span>
+                    <span class="stat-value" id="volume24h">0 BNB</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-coins"></i>
+                <div>
+                    <span class="stat-label">Latest Price</span>
+                    <span class="stat-value" id="latestPrice">-- BNB</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Create Order Section -->
+            <div class="create-order-section">
+                <h2><i class="fas fa-plus-circle"></i> Create Order</h2>
+                
+                <div class="order-type-tabs">
+                    <button class="tab-btn active" data-type="buy">
+                        <i class="fas fa-shopping-cart"></i> Buy CPC
+                    </button>
+                    <button class="tab-btn" data-type="sell">
+                        <i class="fas fa-hand-holding-usd"></i> Sell CPC
+                    </button>
+                </div>
+
+                <div class="order-form">
+                    <div class="form-group">
+                        <label>CPC Amount</label>
+                        <input type="number" id="orderAmount" placeholder="Enter amount" min="1" step="1">
+                        <span class="input-hint">Must be whole number (1, 2, 3...), minimum 1 CPC</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price (BNB per CPC)</label>
+                        <input type="number" id="orderPrice" placeholder="Enter price" min="0" step="0.000001">
+                        <span class="input-hint">Set your price</span>
+                    </div>
+
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Total Value:</span>
+                            <span id="totalValue">0 BNB</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Creation Fee:</span>
+                            <span>0.001 BNB</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Required:</span>
+                            <span id="totalRequired">0.001 BNB</span>
+                        </div>
+                    </div>
+
+                    <button id="createOrderBtn" class="create-btn" disabled>
+                        <i class="fas fa-plus"></i> Create Order
+                    </button>
+
+                    <div class="fee-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Creation fee 0.001 BNB (buyer pays), Trading fee 0.2% (deducted from seller)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order List Section -->
+            <div class="order-list-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list-ul"></i> Order Book</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="buy">Buy</button>
+                        <button class="filter-btn" data-filter="sell">Sell</button>
+                    </div>
+                </div>
+
+                <div class="order-table-container">
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount (CPC)</th>
+                                <th>Price (BNB)</th>
+                                <th>Total (BNB)</th>
+                                <th>Creator</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr class="no-orders">
+                                <td colspan="7">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>No active orders</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button id="prevPage" class="page-btn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <span id="pageInfo">Page 1</span>
+                    <button id="nextPage" class="page-btn">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Orders Section -->
+        <div class="my-orders-section">
+            <h2><i class="fas fa-user-circle"></i> My Orders</h2>
+            <div class="my-orders-container" id="myOrdersContainer">
+                <div class="no-orders">
+                    <i class="fas fa-inbox"></i>
+                    <p>You haven't created any orders yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="./otc.js"></script>
+</body>
+</html>
