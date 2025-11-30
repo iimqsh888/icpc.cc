@@ -512,7 +512,7 @@ async function createOrder() {
         return;
     }
     
-    showLoading(isBuy ? 'Creating buy order...' : 'Creating sell order...');
+    showLoading('Checking balance...');
     
     try {
         const amountWei = web3.utils.toWei(amount, 'ether');
@@ -520,25 +520,125 @@ async function createOrder() {
         const totalValue = (parseFloat(amount) * parseFloat(price)).toFixed(6);
         const totalValueWei = web3.utils.toWei(totalValue, 'ether');
         
+        // Check balance before proceeding
+        const userBalance = await web3.eth.getBalance(userAccount);
+        const userBalanceBNB = parseFloat(web3.utils.fromWei(userBalance, 'ether'));
+        
+        if (isBuy) {
+            const requiredBNB = parseFloat(totalValue) + 0.001 + 0.002; // value + creation fee + estimated gas
+            if (userBalanceBNB < requiredBNB) {
+                hideLoading();
+                showToast(`Insufficient BNB! You need at least ${requiredBNB.toFixed(4)} BNB (you have ${userBalanceBNB.toFixed(4)} BNB)`, 'error');
+                return;
+            }
+        } else {
+            const requiredBNB = 0.001 + 0.002; // creation fee + estimated gas
+            if (userBalanceBNB < requiredBNB) {
+                hideLoading();
+                showToast(`Insufficient BNB for gas! You need at least ${requiredBNB.toFixed(4)} BNB (you have ${userBalanceBNB.toFixed(4)} BNB)`, 'error');
+                return;
+            }
+            
+            // Check CPC balance for sell orders
+            const cpcBalance = await cpcContract.methods.balanceOf(userAccount).call();
+            const cpcBalanceFormatted = parseFloat(web3.utils.fromWei(cpcBalance, 'ether'));
+            if (cpcBalanceFormatted < parseFloat(amount)) {
+                hideLoading();
+                showToast(`Insufficient CPC! You need ${amount} CPC (you have ${cpcBalanceFormatted.toFixed(2)} CPC)`, 'error');
+                return;
+            }
+        }
+        
+        showLoading(isBuy ? 'Creating buy order...' : 'Creating sell order...');
+        
         if (isBuy) {
             const totalRequired = parseFloat(totalValue) + 0.001;
+            
+            // Estimate gas first
+            let gasEstimate;
+            try {
+                gasEstimate = await otcContract.methods.createBuyOrder(amountWei, priceWei).estimateGas({
+                    from: userAccount,
+                    value: web3.utils.toWei(totalRequired.toString(), 'ether')
+                });
+                console.log('Gas estimate:', gasEstimate);
+            } catch (estimateError) {
+                console.error('Gas estimation failed:', estimateError);
+                throw new Error('Transaction will fail: ' + (estimateError.message || 'Unknown error'));
+            }
+            
+            // Get current gas price and increase it by 20% for faster confirmation
+            const currentGasPrice = await web3.eth.getGasPrice();
+            const gasPrice = Math.floor(currentGasPrice * 1.2);
+            
+            console.log('Sending transaction with gas:', Math.floor(gasEstimate * 1.2), 'gasPrice:', web3.utils.fromWei(gasPrice.toString(), 'gwei'), 'Gwei');
+            console.log('Transaction params:', {
+                from: userAccount,
+                value: web3.utils.toWei(totalRequired.toString(), 'ether'),
+                gas: Math.floor(gasEstimate * 1.2),
+                gasPrice: gasPrice
+            });
+            
             const tx = await otcContract.methods.createBuyOrder(amountWei, priceWei).send({
                 from: userAccount,
-                value: web3.utils.toWei(totalRequired.toString(), 'ether')
+                value: web3.utils.toWei(totalRequired.toString(), 'ether'),
+                gas: Math.floor(gasEstimate * 1.2),
+                gasPrice: gasPrice
+            })
+            .on('transactionHash', (hash) => {
+                console.log('Transaction sent! Hash:', hash);
+                showLoading('Transaction sent, waiting for confirmation...');
+            })
+            .on('receipt', (receipt) => {
+                console.log('Transaction confirmed!', receipt);
+            })
+            .on('error', (error) => {
+                console.error('Transaction error:', error);
             });
+            
             console.log('Buy order created:', tx);
         } else {
             // Approve CPC first
             const allowance = await cpcContract.methods.allowance(userAccount, CONFIG.OTC_CONTRACT).call();
             if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
                 showLoading('Approving CPC...');
-                await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, amountWei).send({ from: userAccount });
+                const approveTx = await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, amountWei).send({ 
+                    from: userAccount,
+                    gas: 100000,
+                    gasPrice: await web3.eth.getGasPrice()
+                });
+                console.log('Approval tx:', approveTx);
+                
+                // Wait a bit for approval to be confirmed
+                await new Promise(resolve => setTimeout(resolve, 2000));
             }
             
             showLoading('Creating sell order...');
+            
+            // Estimate gas first
+            let gasEstimate;
+            try {
+                gasEstimate = await otcContract.methods.createSellOrder(amountWei, priceWei).estimateGas({
+                    from: userAccount,
+                    value: web3.utils.toWei('0.001', 'ether')
+                });
+                console.log('Gas estimate:', gasEstimate);
+            } catch (estimateError) {
+                console.error('Gas estimation failed:', estimateError);
+                throw new Error('Transaction will fail: ' + (estimateError.message || 'Unknown error'));
+            }
+            
+            // Get current gas price and increase it by 20% for faster confirmation
+            const currentGasPrice = await web3.eth.getGasPrice();
+            const gasPrice = Math.floor(currentGasPrice * 1.2);
+            
+            console.log('Sending transaction with gas:', Math.floor(gasEstimate * 1.2), 'gasPrice:', web3.utils.fromWei(gasPrice.toString(), 'gwei'), 'Gwei');
+            
             const tx = await otcContract.methods.createSellOrder(amountWei, priceWei).send({
                 from: userAccount,
-                value: web3.utils.toWei('0.001', 'ether')
+                value: web3.utils.toWei('0.001', 'ether'),
+                gas: Math.floor(gasEstimate * 1.2),
+                gasPrice: gasPrice
             });
             console.log('Sell order created:', tx);
         }
@@ -575,18 +675,79 @@ async function fillOrder(orderId, isBuyOrder) {
             
             if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amount))) {
                 showLoading('Approving CPC...');
-                await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, amount).send({ from: userAccount });
+                
+                // Approve unlimited amount to avoid frequent approvals (shows as "Unlimited" in MetaMask)
+                const approveAmount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'; // MaxUint256
+                const approveTx = await cpcContract.methods.approve(CONFIG.OTC_CONTRACT, approveAmount).send({ 
+                    from: userAccount,
+                    gas: 100000
+                });
+                console.log('Approval tx:', approveTx);
+                
+                // Wait for approval to be confirmed
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Verify approval
+                const newAllowance = await cpcContract.methods.allowance(userAccount, CONFIG.OTC_CONTRACT).call();
+                console.log('New allowance:', web3.utils.fromWei(newAllowance, 'ether'), 'CPC');
+                
+                if (web3.utils.toBN(newAllowance).lt(web3.utils.toBN(amount))) {
+                    throw new Error('Approval failed. Please try again.');
+                }
             }
             
             showLoading('Filling buy order...');
-            const tx = await otcContract.methods.fillBuyOrder(orderId, 0).send({ from: userAccount });
+            
+            // Estimate gas first
+            let gasEstimate;
+            try {
+                gasEstimate = await otcContract.methods.fillBuyOrder(orderId, 0).estimateGas({
+                    from: userAccount
+                });
+                console.log('Gas estimate:', gasEstimate);
+            } catch (estimateError) {
+                console.error('Gas estimation failed:', estimateError);
+                throw new Error('Transaction will fail: ' + (estimateError.message || 'Unknown error'));
+            }
+            
+            // Get current gas price and increase it by 20%
+            const currentGasPrice = await web3.eth.getGasPrice();
+            const gasPrice = Math.floor(currentGasPrice * 1.2);
+            
+            const tx = await otcContract.methods.fillBuyOrder(orderId, 0).send({ 
+                from: userAccount,
+                gas: Math.floor(gasEstimate * 1.2),
+                gasPrice: gasPrice
+            });
             console.log('Buy order filled:', tx);
         } else {
             // Filling a sell order (buyer provides BNB)
             const totalValue = (order.totalValue * order.remainingAmount) / order.tokenAmount;
+            
+            showLoading('Filling sell order...');
+            
+            // Estimate gas first
+            let gasEstimate;
+            try {
+                gasEstimate = await otcContract.methods.fillSellOrder(orderId, 0).estimateGas({
+                    from: userAccount,
+                    value: totalValue
+                });
+                console.log('Gas estimate:', gasEstimate);
+            } catch (estimateError) {
+                console.error('Gas estimation failed:', estimateError);
+                throw new Error('Transaction will fail: ' + (estimateError.message || 'Unknown error'));
+            }
+            
+            // Get current gas price and increase it by 20%
+            const currentGasPrice = await web3.eth.getGasPrice();
+            const gasPrice = Math.floor(currentGasPrice * 1.2);
+            
             const tx = await otcContract.methods.fillSellOrder(orderId, 0).send({
                 from: userAccount,
-                value: totalValue
+                value: totalValue,
+                gas: Math.floor(gasEstimate * 1.2),
+                gasPrice: gasPrice
             });
             console.log('Sell order filled:', tx);
         }
@@ -837,8 +998,7 @@ async function checkPreviousConnection() {
                 cpcContract = new web3.eth.Contract(CPC_ABI, CONFIG.CPC_TOKEN);
                 
                 // Update UI
-                document.getElementById('connectWalletBtn').textContent = formatAddress(userAccount);
-                document.getElementById('connectWalletBtn').classList.add('connected');
+                updateWalletUI();
                 
                 console.log('✅ Restored wallet connection:', userAccount);
                 
